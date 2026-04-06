@@ -10,5 +10,12 @@ nginx -t && systemctl reload nginx
 # Set up HTTPS
 certbot --nginx -d coordinatedonate.org -d www.coordinatedonate.org --non-interactive --agree-tos -m "$1"
 
-echo "Done! Now start the app with:"
-echo "  RESEND_API_KEY=your_key NODE_ENV=production pm2 start server.js"
+echo ""
+echo "Done! Next steps:"
+echo "  1. Create .env file:  nano /opt/donation-coordination/.env"
+echo "     Add the following:"
+echo "       NODE_ENV=production"
+echo "       RESEND_API_KEY=your_key_here"
+echo "       PORT=3000"
+echo "  2. Start the app:  pm2 start server.js"
+echo "  3. Enable auto-start on reboot:  pm2 save && pm2 startup"
