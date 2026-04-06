@@ -24,7 +24,7 @@ router.get('/cause-areas', (req, res) => {
 // Get current user's allocation
 router.get('/me', requireAuth, (req, res) => {
   const allocation = db.getAllocation(req.user.id);
-  res.json(allocation || { donation_amount: 0, is_public: 0, items: [] });
+  res.json(allocation || { email: req.user.email, donation_amount: 0, is_public: 0, items: [] });
 });
 
 // Save current user's allocation
