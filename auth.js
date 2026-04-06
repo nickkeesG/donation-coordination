@@ -1,11 +1,13 @@
 const express = require('express');
+const { Resend } = require('resend');
 const db = require('./db');
 
 const router = express.Router();
 const isDev = process.env.NODE_ENV !== 'production';
+const resend = !isDev && process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // POST /auth/login - request a magic link
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { email } = req.body;
   if (!email || typeof email !== 'string') {
     return res.status(400).json({ error: 'Email is required' });
@@ -24,9 +26,21 @@ router.post('/login', (req, res) => {
     console.log(`\n=== Magic Link for ${trimmed} ===`);
     console.log(link);
     console.log('================================\n');
-  } else {
-    // TODO: send email in production
-    console.log('Production email sending not yet implemented');
+    return res.json({ ok: true, message: 'Check your email for a login link' });
+  }
+
+  try {
+    await resend.emails.send({
+      from: 'Donation Coordination <login@coordinatedonate.org>',
+      to: trimmed,
+      subject: 'Your login link',
+      html: `<p>Click the link below to log in to the Donation Coordination platform:</p>
+        <p><a href="${link}">${link}</a></p>
+        <p>This link expires in 15 minutes.</p>`,
+    });
+  } catch (err) {
+    console.error('Failed to send email:', err);
+    return res.status(500).json({ error: 'Failed to send login email. Please try again.' });
   }
 
   res.json({ ok: true, message: 'Check your email for a login link' });
