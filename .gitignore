@@ -3,3 +3,7 @@ data.db
 data.db-shm
 data.db-wal
 .env
+.env.*
+data-dev.db
+data-dev.db-shm
+data-dev.db-wal

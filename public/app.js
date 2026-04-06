@@ -1,11 +1,16 @@
 (async function () {
   let causeAreas = [];
 
+  // Detect base path from current URL (e.g. /dev/app.html -> /dev)
+  const pathParts = window.location.pathname.split('/');
+  pathParts.pop(); // remove filename
+  const basePath = pathParts.join('/') || '';
+
   // Check auth - redirect to login if not authenticated
   async function apiFetch(url, opts) {
     const res = await fetch(url, opts);
     if (res.status === 401) {
-      window.location.href = '/';
+      window.location.href = basePath + '/';
       throw new Error('Not authenticated');
     }
     return res;
@@ -231,6 +236,6 @@
   // Logout
   document.getElementById('logout-btn').addEventListener('click', async () => {
     await fetch('/auth/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.location.href = basePath + '/';
   });
 })();

@@ -4,7 +4,10 @@ const db = require('./db');
 
 const router = express.Router();
 const isDev = process.env.NODE_ENV !== 'production';
-const resend = !isDev && process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+const allowAllEmails = process.env.ALLOW_ALL_EMAILS === 'true';
+const basePath = process.env.BASE_PATH || '';
+const cookieName = process.env.COOKIE_NAME || 'session';
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // POST /auth/login - request a magic link
 router.post('/login', async (req, res) => {
@@ -15,18 +18,23 @@ router.post('/login', async (req, res) => {
 
   const trimmed = email.trim().toLowerCase();
 
-  if (!isDev && !trimmed.endsWith('@anthropic.com')) {
+  if (!isDev && !allowAllEmails && !trimmed.endsWith('@anthropic.com')) {
     return res.status(403).json({ error: 'Only @anthropic.com emails are allowed' });
   }
 
   const token = db.createMagicLink(trimmed);
-  const link = `${req.protocol}://${req.get('host')}/auth/verify?token=${token}`;
+  const link = `${req.protocol}://${req.get('host')}${basePath}/auth/verify?token=${token}`;
 
   if (isDev) {
     console.log(`\n=== Magic Link for ${trimmed} ===`);
     console.log(link);
     console.log('================================\n');
     return res.json({ ok: true, message: 'Check your email for a login link' });
+  }
+
+  if (!resend) {
+    console.error('No RESEND_API_KEY configured');
+    return res.status(500).json({ error: 'Email sending not configured' });
   }
 
   try {
@@ -61,36 +69,36 @@ router.get('/verify', (req, res) => {
   const user = db.getOrCreateUser(link.email);
   const sessionToken = db.createSession(user.id);
 
-  res.cookie('session', sessionToken, {
+  res.cookie(cookieName, sessionToken, {
     httpOnly: true,
     sameSite: 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     secure: !isDev,
   });
 
-  res.redirect('/app.html');
+  res.redirect(`${basePath}/app.html`);
 });
 
 // POST /auth/logout
 router.post('/logout', (req, res) => {
-  const token = req.cookies.session;
+  const token = req.cookies[cookieName];
   if (token) {
     db.deleteSession(token);
   }
-  res.clearCookie('session');
+  res.clearCookie(cookieName);
   res.json({ ok: true });
 });
 
 // Middleware to require authentication
 function requireAuth(req, res, next) {
-  const token = req.cookies.session;
+  const token = req.cookies[cookieName];
   if (!token) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
 
   const session = db.getSession(token);
   if (!session) {
-    res.clearCookie('session');
+    res.clearCookie(cookieName);
     return res.status(401).json({ error: 'Session expired' });
   }
 
