@@ -9,6 +9,8 @@ const basePath = process.env.BASE_PATH || '';
 const cookieName = process.env.COOKIE_NAME || 'session';
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
+console.log('Auth config:', { isDev, allowAllEmails, basePath, cookieName, NODE_ENV: process.env.NODE_ENV, ALLOW_ALL_EMAILS: process.env.ALLOW_ALL_EMAILS });
+
 // POST /auth/login - request a magic link
 router.post('/login', async (req, res) => {
   const { email } = req.body;
