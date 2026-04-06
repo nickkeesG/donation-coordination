@@ -174,13 +174,17 @@ function getAggregate() {
   const rows = stmts.getAggregate.all();
   const { total } = stmts.getTotalDonations.get();
   // Convert to percentages
-  const result = rows.map(r => ({
-    cause_area: r.cause_area,
-    planned_pct: total > 0 ? (r.total_planned_amount / total) * 100 : 0,
-    ideal_pct: total > 0 ? (r.total_ideal_amount / total) * 100 : 0,
-    planned_amount: r.total_planned_amount,
-    ideal_amount: r.total_ideal_amount,
-  }));
+  const rowMap = Object.fromEntries(rows.map(r => [r.cause_area, r]));
+  const result = CAUSE_AREAS.map(area => {
+    const r = rowMap[area];
+    return {
+      cause_area: area,
+      planned_pct: r && total > 0 ? (r.total_planned_amount / total) * 100 : 0,
+      ideal_pct: r && total > 0 ? (r.total_ideal_amount / total) * 100 : 0,
+      planned_amount: r ? r.total_planned_amount : 0,
+      ideal_amount: r ? r.total_ideal_amount : 0,
+    };
+  });
   return { total, items: result };
 }
 
@@ -199,6 +203,7 @@ function getPublicDonations() {
   const publicRows = rows.filter(r => r.is_public);
   const donations = publicRows.map(r => {
     const items = stmts.getAllocationItems.all(r.allocation_id);
+    items.sort((a, b) => CAUSE_AREAS.indexOf(a.cause_area) - CAUSE_AREAS.indexOf(b.cause_area));
     return {
       email: r.email,
       donation_amount: r.donation_amount,
