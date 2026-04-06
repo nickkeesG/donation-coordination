@@ -17,11 +17,11 @@
   }
 
   // Load cause areas
-  const caRes = await fetch('/api/cause-areas');
+  const caRes = await fetch(basePath + '/api/cause-areas');
   causeAreas = await caRes.json();
 
   // Load current user data
-  const meRes = await apiFetch('/api/me');
+  const meRes = await apiFetch(basePath + '/api/me');
   const me = await meRes.json();
 
   // Populate user info
@@ -121,7 +121,7 @@
       return;
     }
 
-    const res = await apiFetch('/api/me', {
+    const res = await apiFetch(basePath + '/api/me', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -154,7 +154,7 @@
 
   // Load aggregate
   async function loadAggregate() {
-    const res = await apiFetch('/api/aggregate');
+    const res = await apiFetch(basePath + '/api/aggregate');
     const data = await res.json();
     const tbody = document.querySelector('#aggregate-table tbody');
     tbody.innerHTML = '';
@@ -191,7 +191,7 @@
 
   // Load public donations
   async function loadDonations() {
-    const res = await apiFetch('/api/donations');
+    const res = await apiFetch(basePath + '/api/donations');
     const data = await res.json();
     const tbody = document.querySelector('#donations-table tbody');
     tbody.innerHTML = '';
@@ -227,7 +227,7 @@
   loadDonations();
 
   // SSE for real-time updates
-  const events = new EventSource('/api/events');
+  const events = new EventSource(basePath + '/api/events');
   events.addEventListener('update', () => {
     loadAggregate();
     loadDonations();
@@ -235,7 +235,7 @@
 
   // Logout
   document.getElementById('logout-btn').addEventListener('click', async () => {
-    await fetch('/auth/logout', { method: 'POST' });
+    await fetch(basePath + '/auth/logout', { method: 'POST' });
     window.location.href = basePath + '/';
   });
 })();

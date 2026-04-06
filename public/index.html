@@ -17,13 +17,18 @@
     <p id="message" hidden></p>
   </div>
   <script>
+    // Detect base path from current URL (e.g. /dev/ -> /dev, / -> )
+    const pathParts = window.location.pathname.split('/');
+    pathParts.pop(); // remove filename or trailing empty
+    const basePath = pathParts.join('/') || '';
+
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value;
       const msg = document.getElementById('message');
       msg.hidden = true;
 
-      const res = await fetch('/auth/login', {
+      const res = await fetch(basePath + '/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
