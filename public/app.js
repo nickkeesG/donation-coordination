@@ -111,6 +111,15 @@
     }
   });
 
+  // Get current user's ideal percentages from sliders
+  function getMyIdealPcts() {
+    const pcts = {};
+    for (const area of causeAreas) {
+      pcts[area] = parseInt(idealSliders[area].value);
+    }
+    return pcts;
+  }
+
   // Load aggregate
   async function loadAggregate() {
     const res = await apiFetch('/api/aggregate');
@@ -120,16 +129,21 @@
 
     document.getElementById('total-amount').textContent = data.total.toLocaleString();
 
+    const myIdeal = getMyIdealPcts();
+
     for (const item of data.items) {
+      const myIdealPct = myIdeal[item.cause_area] || 0;
       const tr = document.createElement('tr');
-      const maxPct = Math.max(item.planned_pct, item.ideal_pct, 1);
-      const scale = 200 / maxPct; // max bar width 200px
+      const maxPct = Math.max(item.planned_pct, myIdealPct, item.ideal_pct, 1);
+      const scale = 150 / maxPct;
       tr.innerHTML = `
         <td>${item.cause_area}</td>
         <td>${item.planned_pct.toFixed(1)}%</td>
+        <td>${myIdealPct}%</td>
         <td>${item.ideal_pct.toFixed(1)}%</td>
         <td>
           <span class="bar bar-planned" style="width:${item.planned_pct * scale}px"></span><br>
+          <span class="bar bar-my-ideal" style="width:${myIdealPct * scale}px"></span><br>
           <span class="bar bar-ideal" style="width:${item.ideal_pct * scale}px"></span>
         </td>
       `;

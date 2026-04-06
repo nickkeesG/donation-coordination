@@ -22,6 +22,7 @@ th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; font
 th { font-weight: 600; }
 .bar { height: 16px; border-radius: 3px; display: inline-block; vertical-align: middle; }
 .bar-planned { background: #2563eb; }
+.bar-my-ideal { background: #10b981; }
 .bar-ideal { background: #f59e0b; }
 .legend { display: flex; gap: 16px; margin-bottom: 8px; font-size: 13px; }
 .legend span { display: flex; align-items: center; gap: 4px; }
