@@ -23,11 +23,11 @@
   const sessionEmail = me.email || '';
   document.getElementById('user-email').textContent = sessionEmail ? `Logged in as ${sessionEmail}` : '';
 
-  // Build sliders for a group
-  function buildSliders(containerId, totalId, type) {
+  // Build number inputs with +/- buttons for a group
+  function buildInputs(containerId, totalId, type) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
-    const sliders = {};
+    const inputs = {};
 
     for (const area of causeAreas) {
       const existing = me.items ? me.items.find(i => i.cause_area === area) : null;
@@ -37,36 +37,56 @@
       row.className = 'cause-row';
       row.innerHTML = `
         <span class="name">${area}</span>
-        <input type="range" min="0" max="100" value="${val}" data-area="${area}">
+        <div class="stepper">
+          <button type="button" class="step-btn" data-delta="-10">-10</button>
+          <button type="button" class="step-btn" data-delta="-1">-1</button>
+          <input type="number" min="0" max="100" value="${Math.round(val)}" data-area="${area}">
+          <button type="button" class="step-btn" data-delta="1">+1</button>
+          <button type="button" class="step-btn" data-delta="10">+10</button>
+        </div>
         <span class="value">${Math.round(val)}%</span>
       `;
       container.appendChild(row);
 
-      const slider = row.querySelector('input[type="range"]');
+      const input = row.querySelector('input[type="number"]');
       const display = row.querySelector('.value');
-      sliders[area] = slider;
+      inputs[area] = input;
 
-      slider.addEventListener('input', () => {
-        display.textContent = `${slider.value}%`;
+      function clampAndUpdate() {
+        let v = parseInt(input.value) || 0;
+        v = Math.max(0, Math.min(100, v));
+        input.value = v;
+        display.textContent = `${v}%`;
         updateTotal(containerId, totalId);
+      }
+
+      input.addEventListener('input', clampAndUpdate);
+
+      row.querySelectorAll('.step-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          let v = parseInt(input.value) || 0;
+          v = Math.max(0, Math.min(100, v + parseInt(btn.dataset.delta)));
+          input.value = v;
+          clampAndUpdate();
+        });
       });
     }
 
     updateTotal(containerId, totalId);
-    return sliders;
+    return inputs;
   }
 
   function updateTotal(containerId, totalId) {
-    const sliders = document.getElementById(containerId).querySelectorAll('input[type="range"]');
+    const inputs = document.getElementById(containerId).querySelectorAll('input[type="number"]');
     let sum = 0;
-    sliders.forEach(s => sum += parseInt(s.value));
+    inputs.forEach(s => sum += parseInt(s.value) || 0);
     const el = document.getElementById(totalId);
     el.textContent = sum;
     el.style.color = sum === 100 ? '#16a34a' : '#dc2626';
   }
 
-  const plannedSliders = buildSliders('planned-sliders', 'planned-total', 'planned_pct');
-  const idealSliders = buildSliders('ideal-sliders', 'ideal-total', 'ideal_pct');
+  const plannedSliders = buildInputs('planned-sliders', 'planned-total', 'planned_pct');
+  const idealSliders = buildInputs('ideal-sliders', 'ideal-total', 'ideal_pct');
 
   // Set donation amount and public toggle
   document.getElementById('donation-amount').value = me.donation_amount || 0;
@@ -79,6 +99,13 @@
       planned_pct: parseInt(plannedSliders[area].value),
       ideal_pct: parseInt(idealSliders[area].value),
     }));
+
+    const donationAmount = parseFloat(document.getElementById('donation-amount').value) || 0;
+    if (donationAmount <= 0) {
+      document.getElementById('save-status').textContent = 'Please enter a donation amount greater than 0';
+      document.getElementById('save-status').style.color = '#dc2626';
+      return;
+    }
 
     const plannedSum = items.reduce((s, i) => s + i.planned_pct, 0);
     const idealSum = items.reduce((s, i) => s + i.ideal_pct, 0);
@@ -93,7 +120,7 @@
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        donation_amount: parseFloat(document.getElementById('donation-amount').value) || 0,
+        donation_amount: donationAmount,
         is_public: document.getElementById('is-public').checked,
         items,
       }),
@@ -131,11 +158,17 @@
 
     const myIdeal = getMyIdealPcts();
 
+    // Use a single scale across all rows so bars are comparable
+    let globalMax = 1;
+    for (const item of data.items) {
+      const myIdealPct = myIdeal[item.cause_area] || 0;
+      globalMax = Math.max(globalMax, item.planned_pct, myIdealPct, item.ideal_pct);
+    }
+    const scale = 150 / globalMax;
+
     for (const item of data.items) {
       const myIdealPct = myIdeal[item.cause_area] || 0;
       const tr = document.createElement('tr');
-      const maxPct = Math.max(item.planned_pct, myIdealPct, item.ideal_pct, 1);
-      const scale = 150 / maxPct;
       tr.innerHTML = `
         <td>${item.cause_area}</td>
         <td>${item.planned_pct.toFixed(1)}%</td>

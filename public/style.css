@@ -13,8 +13,15 @@ button:hover { background: #1d4ed8; }
 label { display: block; margin-bottom: 4px; font-weight: 500; }
 .cause-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .cause-row .name { width: 220px; flex-shrink: 0; font-size: 14px; }
-.cause-row input[type="range"] { flex: 1; }
 .cause-row .value { width: 45px; text-align: right; font-size: 14px; }
+.stepper { display: flex; align-items: center; gap: 4px; }
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.stepper input[type="number"] { width: 50px; text-align: center; margin: 0; padding: 6px 4px; }
+.step-btn { background: #e5e7eb; color: #333; border: 1px solid #ccc; padding: 6px 8px; font-size: 13px; cursor: pointer; min-width: 36px; }
+.step-btn:hover { background: #d1d5db; }
+.step-btn:active { background: #c0c4c9; }
 .section { margin-bottom: 20px; }
 .toggle-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
 table { width: 100%; border-collapse: collapse; margin-top: 8px; }
