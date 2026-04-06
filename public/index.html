@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donation Coordination - Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Donation Coordination</h1>
+    <p>Enter your email to receive a login link.</p>
+    <form id="login-form">
+      <input type="email" id="email" placeholder="you@anthropic.com" required>
+      <button type="submit">Send Login Link</button>
+    </form>
+    <p id="message" hidden></p>
+  </div>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const msg = document.getElementById('message');
+      msg.hidden = true;
+
+      const res = await fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+
+      msg.hidden = false;
+      if (res.ok) {
+        msg.textContent = data.message;
+        msg.className = 'success';
+      } else {
+        msg.textContent = data.error;
+        msg.className = 'error';
+      }
+    });
+  </script>
+</body>
+</html>

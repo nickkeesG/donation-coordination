@@ -1,0 +1,25 @@
+{
+  "name": "donation-coordination",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickkeesG/donation-coordination.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nickkeesG/donation-coordination/issues"
+  },
+  "homepage": "https://github.com/nickkeesG/donation-coordination#readme",
+  "dependencies": {
+    "better-sqlite3": "^12.8.0",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.2.1"
+  }
+}
