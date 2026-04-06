@@ -158,7 +158,21 @@
     const tbody = document.querySelector('#donations-table tbody');
     tbody.innerHTML = '';
 
-    for (const d of data) {
+    if (data.privacy_active) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="3" style="color:#888;font-style:italic">Individual donations are hidden until at least 3 donors choose to be anonymous (to prevent identification by process of elimination).</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+
+    if (data.donations.length === 0) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="3" style="color:#888;font-style:italic">No public donations yet.</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+
+    for (const d of data.donations) {
       const tr = document.createElement('tr');
       const alloc = d.items.map(i => `${i.cause_area}: ${i.planned_pct}%`).join(', ');
       tr.innerHTML = `

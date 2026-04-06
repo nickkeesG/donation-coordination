@@ -184,17 +184,28 @@ function getAggregate() {
   return { total, items: result };
 }
 
+const MIN_ANONYMOUS_FOR_PUBLIC = 3;
+
 function getPublicDonations() {
   const rows = stmts.getPublicDonations.all();
-  return rows.map(r => {
+  const anonymousCount = rows.filter(r => !r.is_public).length;
+
+  // If fewer than 3 anonymous donors, hide all identities to prevent deduction
+  if (anonymousCount < MIN_ANONYMOUS_FOR_PUBLIC) {
+    return { privacy_active: true, donations: [] };
+  }
+
+  // Only return public (non-anonymous) donations
+  const publicRows = rows.filter(r => r.is_public);
+  const donations = publicRows.map(r => {
     const items = stmts.getAllocationItems.all(r.allocation_id);
     return {
-      email: r.is_public ? r.email : 'Anonymous',
+      email: r.email,
       donation_amount: r.donation_amount,
-      is_public: !!r.is_public,
       items,
     };
   });
+  return { privacy_active: false, donations };
 }
 
 module.exports = {
