@@ -10,15 +10,10 @@ db.pragma('foreign_keys = ON');
 
 // Fixed cause areas
 const CAUSE_AREAS = [
-  'AI Safety',
-  'Global Health & Poverty',
+  'Global Health',
   'Animal Welfare',
-  'Climate Change',
-  'Biosecurity & Pandemic Preparedness',
-  'Nuclear Security',
-  'Science & Research',
-  'Education',
-  'Other / Miscellaneous',
+  'Global Catastrophic Risk',
+  'Other',
 ];
 
 // Create tables
