@@ -106,7 +106,7 @@
 
   // Set donation amount and public toggle
   document.getElementById('donation-amount').value = me.donation_amount || 0;
-  document.getElementById('is-public').checked = !!me.is_public;
+  document.getElementById('is-anon').checked = !me.is_public;
 
   // Save
   document.getElementById('save-btn').addEventListener('click', async () => {
@@ -137,7 +137,7 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         donation_amount: donationAmount,
-        is_public: document.getElementById('is-public').checked,
+        is_public: !document.getElementById('is-anon').checked,
         items,
       }),
     });
