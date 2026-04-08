@@ -18,6 +18,7 @@ const CAUSE_AREAS = [
   'Longview Nuclear Weapons Policy',
   'Longview Frontier AI',
   'Sentinel Bio',
+  'Other',
 ];
 
 // Create tables
