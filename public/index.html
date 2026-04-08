@@ -23,6 +23,11 @@
     pathParts.pop(); // remove filename or trailing empty
     const basePath = pathParts.join('/') || '';
 
+    // If already logged in, redirect to app
+    fetch(basePath + '/api/me').then(r => {
+      if (r.ok) window.location.href = basePath + '/app.html';
+    });
+
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value;
