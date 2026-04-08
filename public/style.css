@@ -39,7 +39,7 @@ th { font-weight: 600; color: #30302e; }
 .agg-row { margin-bottom: 12px; font-family: system-ui, sans-serif; }
 .agg-row-label { font-weight: 600; font-size: 14px; margin-bottom: 4px; color: #30302e; }
 .agg-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
-.agg-bar-track { width: 300px; flex-shrink: 0; }
+.agg-bar-row .bar { flex-shrink: 0; }
 .agg-bar-pct { font-size: 13px; color: #30302e; white-space: nowrap; }
 .unsaved-hint { color: #dc2626; font-size: 0.75em; font-weight: 400; }
 #save-btn.dirty { background: #dc2626; }

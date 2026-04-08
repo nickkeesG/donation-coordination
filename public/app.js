@@ -246,18 +246,21 @@
       // Desktop bar chart
       const row = document.createElement('div');
       row.className = 'agg-row';
+      const plannedW = globalMax > 0 ? (item.planned_pct / globalMax) * 85 : 0;
+      const myIdealW = globalMax > 0 ? (myIdealPct / globalMax) * 85 : 0;
+      const idealW = globalMax > 0 ? (item.ideal_pct / globalMax) * 85 : 0;
       row.innerHTML = `
         <div class="agg-row-label">${item.cause_area}</div>
         <div class="agg-bar-row">
-          <div class="agg-bar-track"><span class="bar bar-planned" style="width:${globalMax > 0 ? (item.planned_pct / globalMax) * 100 : 0}%"></span></div>
+          <span class="bar bar-planned" style="width:${plannedW}%"></span>
           <span class="agg-bar-pct">${item.planned_pct.toFixed(1)}%</span>
         </div>
         <div class="agg-bar-row">
-          <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${globalMax > 0 ? (myIdealPct / globalMax) * 100 : 0}%"></span></div>
+          <span class="bar bar-my-ideal" style="width:${myIdealW}%"></span>
           <span class="agg-bar-pct">${myIdealPct}%</span>
         </div>
         <div class="agg-bar-row">
-          <div class="agg-bar-track"><span class="bar bar-ideal" style="width:${globalMax > 0 ? (item.ideal_pct / globalMax) * 100 : 0}%"></span></div>
+          <span class="bar bar-ideal" style="width:${idealW}%"></span>
           <span class="agg-bar-pct">${item.ideal_pct.toFixed(1)}%</span>
         </div>
       `;
