@@ -137,6 +137,9 @@
     const dirty = JSON.stringify(current) !== JSON.stringify(savedState);
     document.getElementById('unsaved-banner').hidden = !dirty;
     document.getElementById('save-btn').classList.toggle('dirty', dirty);
+    if (dirty) {
+      document.getElementById('save-status').textContent = '';
+    }
   }
 
   function markClean() {
