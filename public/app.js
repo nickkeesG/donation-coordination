@@ -168,6 +168,12 @@
       return;
     }
 
+    if (!document.getElementById('is-anon').checked && !document.getElementById('display-name').value.trim()) {
+      document.getElementById('save-status').textContent = 'Please enter a display name, or choose to be anonymous';
+      document.getElementById('save-status').style.color = '#dc2626';
+      return;
+    }
+
     const plannedSum = items.reduce((s, i) => s + i.planned_pct, 0);
     const idealSum = items.reduce((s, i) => s + i.ideal_pct, 0);
 
