@@ -19,9 +19,8 @@ input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .pct-box { display: inline-flex; align-items: center; gap: 0; background: #faf9f5; border: 1px solid rgba(20, 20, 19, 0.25); border-radius: 3px; padding: 0 2px 0 0; font-size: 14px; font-family: system-ui, sans-serif; color: #30302e; }
-.pct-box input[type="number"] { width: 24px; text-align: right; margin: 0; padding: 4px 0 4px 2px; border: none; background: transparent; font-size: 14px; }
-.pct-box input[type="number"]:focus { outline: none; }
-.stepper input[type="number"] { width: 50px; text-align: center; margin: 0; padding: 6px 4px; }
+.stepper .pct-box input[type="number"] { width: 24px; text-align: right; margin: 0; margin-bottom: 0; padding: 4px 0 4px 2px; border: none; background: transparent; font-size: 14px; }
+.stepper .pct-box input[type="number"]:focus { outline: none; }
 .step-btn { background: #ddd9ce; color: #30302e; border: 1px solid rgba(20, 20, 19, 0.2); padding: 6px 8px; font-size: 13px; cursor: pointer; min-width: 36px; font-weight: 500; }
 .step-btn:hover { background: #cec9bd; }
 .step-btn:active { background: #c0bbb0; }
