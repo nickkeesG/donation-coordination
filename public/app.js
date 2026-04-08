@@ -104,9 +104,17 @@
   const plannedSliders = buildInputs('planned-sliders', 'planned-total', 'planned_pct');
   const idealSliders = buildInputs('ideal-sliders', 'ideal-total', 'ideal_pct');
 
-  // Set donation amount and public toggle
+  // Set donation amount, anon toggle, and display name
   document.getElementById('donation-amount').value = me.donation_amount || 0;
   document.getElementById('is-anon').checked = !me.is_public;
+  document.getElementById('display-name').value = me.display_name || '';
+
+  // Show/hide name field based on anon toggle
+  function updateNameFieldVisibility() {
+    document.getElementById('name-field').hidden = document.getElementById('is-anon').checked;
+  }
+  document.getElementById('is-anon').addEventListener('change', updateNameFieldVisibility);
+  updateNameFieldVisibility();
 
   // Save
   document.getElementById('save-btn').addEventListener('click', async () => {
@@ -138,6 +146,7 @@
       body: JSON.stringify({
         donation_amount: donationAmount,
         is_public: !document.getElementById('is-anon').checked,
+        display_name: document.getElementById('display-name').value.trim(),
         items,
       }),
     });
@@ -226,7 +235,7 @@
       const tr = document.createElement('tr');
       const alloc = d.items.map(i => `${i.cause_area}: ${i.planned_pct}%`).join(', ');
       tr.innerHTML = `
-        <td>${d.email}</td>
+        <td>${d.name}</td>
         <td>$${d.donation_amount.toLocaleString()}</td>
         <td style="font-size:12px">${alloc}</td>
       `;

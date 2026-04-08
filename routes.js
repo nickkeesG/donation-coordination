@@ -29,7 +29,7 @@ router.get('/me', requireAuth, (req, res) => {
 
 // Save current user's allocation
 router.put('/me', requireAuth, (req, res) => {
-  const { donation_amount, is_public, items } = req.body;
+  const { donation_amount, is_public, display_name, items } = req.body;
 
   if (typeof donation_amount !== 'number' || donation_amount < 0) {
     return res.status(400).json({ error: 'Invalid donation amount' });
@@ -56,7 +56,7 @@ router.put('/me', requireAuth, (req, res) => {
     return res.status(400).json({ error: 'Percentages must sum to 100' });
   }
 
-  db.saveAllocation(req.user.id, donation_amount, !!is_public, items);
+  db.saveAllocation(req.user.id, donation_amount, !!is_public, display_name || '', items);
   broadcast('update', { type: 'allocation_changed' });
   res.json({ ok: true });
 });
