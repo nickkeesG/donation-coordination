@@ -36,6 +36,11 @@ th { font-weight: 600; color: #30302e; }
 .legend { display: flex; gap: 16px; margin-bottom: 8px; font-size: 13px; font-family: system-ui, sans-serif; }
 .legend span { display: flex; align-items: center; gap: 4px; }
 .legend .swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+.agg-row { margin-bottom: 12px; font-family: system-ui, sans-serif; }
+.agg-row-label { font-weight: 600; font-size: 14px; margin-bottom: 4px; color: #30302e; }
+.agg-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+.agg-bar-track { width: 300px; flex-shrink: 0; }
+.agg-bar-pct { font-size: 13px; color: #30302e; white-space: nowrap; }
 .unsaved-hint { color: #dc2626; font-size: 0.75em; font-weight: 400; }
 #save-btn.dirty { background: #dc2626; }
 #save-btn.dirty:hover { background: #b91c1c; }
@@ -57,8 +62,8 @@ th { font-weight: 600; color: #30302e; }
   .cause-row .stepper { width: 100%; max-width: 320px; }
   .step-btn { flex: 1; min-width: 0; max-width: 60px; padding: 8px 0; font-size: 12px; text-align: center; }
 
-  /* Hide tables, show cards */
-  #aggregate-table { display: none; }
+  /* Hide desktop chart/tables, show cards */
+  #aggregate-chart { display: none; }
   .agg-card { display: block; padding: 10px 0; border-bottom: 1px solid rgba(20, 20, 19, 0.1); font-family: system-ui, sans-serif; font-size: 14px; }
   .agg-card:last-child { border-bottom: none; }
   .agg-card-header { font-weight: 600; margin-bottom: 6px; }

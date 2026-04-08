@@ -220,8 +220,6 @@
   async function loadAggregate() {
     const res = await apiFetch(basePath + '/api/aggregate');
     const data = await res.json();
-    const tbody = document.querySelector('#aggregate-table tbody');
-    tbody.innerHTML = '';
 
     document.getElementById('total-amount').textContent = data.total.toLocaleString();
     document.getElementById('num-donors').textContent = data.num_donors;
@@ -234,26 +232,36 @@
       const myIdealPct = myIdeal[item.cause_area] || 0;
       globalMax = Math.max(globalMax, item.planned_pct, myIdealPct, item.ideal_pct);
     }
-    const scale = 120 / globalMax;
+
+    // Desktop chart
+    const chart = document.getElementById('aggregate-chart');
+    chart.innerHTML = '';
 
     const cards = document.getElementById('aggregate-cards');
     cards.innerHTML = '';
 
     for (const item of data.items) {
       const myIdealPct = myIdeal[item.cause_area] || 0;
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${item.cause_area}</td>
-        <td>${item.planned_pct.toFixed(1)}%</td>
-        <td>${myIdealPct}%</td>
-        <td>${item.ideal_pct.toFixed(1)}%</td>
-        <td>
-          <span class="bar bar-planned" style="width:${item.planned_pct * scale}px"></span><br>
-          <span class="bar bar-my-ideal" style="width:${myIdealPct * scale}px"></span><br>
-          <span class="bar bar-ideal" style="width:${item.ideal_pct * scale}px"></span>
-        </td>
+
+      // Desktop bar chart
+      const row = document.createElement('div');
+      row.className = 'agg-row';
+      row.innerHTML = `
+        <div class="agg-row-label">${item.cause_area}</div>
+        <div class="agg-bar-row">
+          <div class="agg-bar-track"><span class="bar bar-planned" style="width:${globalMax > 0 ? (item.planned_pct / globalMax) * 100 : 0}%"></span></div>
+          <span class="agg-bar-pct">${item.planned_pct.toFixed(1)}%</span>
+        </div>
+        <div class="agg-bar-row">
+          <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${globalMax > 0 ? (myIdealPct / globalMax) * 100 : 0}%"></span></div>
+          <span class="agg-bar-pct">${myIdealPct}%</span>
+        </div>
+        <div class="agg-bar-row">
+          <div class="agg-bar-track"><span class="bar bar-ideal" style="width:${globalMax > 0 ? (item.ideal_pct / globalMax) * 100 : 0}%"></span></div>
+          <span class="agg-bar-pct">${item.ideal_pct.toFixed(1)}%</span>
+        </div>
       `;
-      tbody.appendChild(tr);
+      chart.appendChild(row);
 
       // Mobile card
       const card = document.createElement('div');
