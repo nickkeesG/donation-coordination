@@ -58,8 +58,14 @@
       inputs[area] = input;
 
       function clampAndUpdate() {
+        // Sum all other inputs in this group
+        let othersTotal = 0;
+        for (const a of causeAreas) {
+          if (a !== area) othersTotal += parseInt(inputs[a].value) || 0;
+        }
+        const maxAllowed = 100 - othersTotal;
         let v = parseInt(input.value) || 0;
-        v = Math.max(0, Math.min(100, v));
+        v = Math.max(0, Math.min(maxAllowed, v));
         input.value = v;
         display.textContent = `${v}%`;
         updateTotal(containerId, totalId);
@@ -69,8 +75,13 @@
 
       row.querySelectorAll('.step-btn').forEach(btn => {
         btn.addEventListener('click', () => {
+          let othersTotal = 0;
+          for (const a of causeAreas) {
+            if (a !== area) othersTotal += parseInt(inputs[a].value) || 0;
+          }
+          const maxAllowed = 100 - othersTotal;
           let v = parseInt(input.value) || 0;
-          v = Math.max(0, Math.min(100, v + parseInt(btn.dataset.delta)));
+          v = Math.max(0, Math.min(maxAllowed, v + parseInt(btn.dataset.delta)));
           input.value = v;
           clampAndUpdate();
         });
