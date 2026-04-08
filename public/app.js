@@ -116,22 +116,42 @@
   document.getElementById('is-anon').addEventListener('change', updateNameFieldVisibility);
   updateNameFieldVisibility();
 
-  // Unsaved changes tracking
-  function markDirty() {
-    document.getElementById('unsaved-banner').hidden = false;
-    document.getElementById('save-btn').classList.add('dirty');
+  // Unsaved changes tracking - compare current form state to saved values
+  let savedState = getFormState();
+
+  function getFormState() {
+    const planned = {};
+    const ideal = {};
+    for (const area of causeAreas) {
+      planned[area] = parseInt(plannedSliders[area].value) || 0;
+      ideal[area] = parseInt(idealSliders[area].value) || 0;
+    }
+    return {
+      donation_amount: parseFloat(document.getElementById('donation-amount').value) || 0,
+      is_anon: document.getElementById('is-anon').checked,
+      display_name: document.getElementById('display-name').value.trim(),
+      planned,
+      ideal,
+    };
+  }
+
+  function checkDirty() {
+    const current = getFormState();
+    const dirty = JSON.stringify(current) !== JSON.stringify(savedState);
+    document.getElementById('unsaved-banner').hidden = !dirty;
+    document.getElementById('save-btn').classList.toggle('dirty', dirty);
   }
 
   function markClean() {
-    document.getElementById('unsaved-banner').hidden = true;
-    document.getElementById('save-btn').classList.remove('dirty');
+    savedState = getFormState();
+    checkDirty();
   }
 
-  document.getElementById('donation-amount').addEventListener('input', markDirty);
-  document.getElementById('is-anon').addEventListener('change', markDirty);
-  document.getElementById('display-name').addEventListener('input', markDirty);
-  document.querySelectorAll('.step-btn').forEach(btn => btn.addEventListener('click', markDirty));
-  document.querySelectorAll('.stepper input[type="number"]').forEach(inp => inp.addEventListener('input', markDirty));
+  document.getElementById('donation-amount').addEventListener('input', checkDirty);
+  document.getElementById('is-anon').addEventListener('change', checkDirty);
+  document.getElementById('display-name').addEventListener('input', checkDirty);
+  document.querySelectorAll('.step-btn').forEach(btn => btn.addEventListener('click', () => setTimeout(checkDirty, 0)));
+  document.querySelectorAll('.stepper input[type="number"]').forEach(inp => inp.addEventListener('input', checkDirty));
 
   // Save
   document.getElementById('save-btn').addEventListener('click', async () => {
