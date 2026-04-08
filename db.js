@@ -109,7 +109,7 @@ const stmts = {
     GROUP BY ai.cause_area
   `),
   getTotalDonations: db.prepare(
-    'SELECT COALESCE(SUM(donation_amount), 0) as total FROM allocations WHERE donation_amount > 0'
+    'SELECT COALESCE(SUM(donation_amount), 0) as total, COUNT(*) as num_donors FROM allocations WHERE donation_amount > 0'
   ),
   getPublicDonations: db.prepare(`
     SELECT a.donation_amount, a.is_public, u.email, a.id as allocation_id
@@ -173,7 +173,7 @@ function getAllocation(userId) {
 
 function getAggregate() {
   const rows = stmts.getAggregate.all();
-  const { total } = stmts.getTotalDonations.get();
+  const { total, num_donors } = stmts.getTotalDonations.get();
   // Convert to percentages
   const rowMap = Object.fromEntries(rows.map(r => [r.cause_area, r]));
   const result = CAUSE_AREAS.map(area => {
@@ -186,7 +186,7 @@ function getAggregate() {
       ideal_amount: r ? r.total_ideal_amount : 0,
     };
   });
-  return { total, items: result };
+  return { total, num_donors, items: result };
 }
 
 const MIN_ANONYMOUS_FOR_PUBLIC = 3;

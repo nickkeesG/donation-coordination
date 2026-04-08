@@ -12,6 +12,7 @@
     const data = await res.json();
 
     document.getElementById('total-amount').textContent = data.total.toLocaleString();
+    document.getElementById('num-donors').textContent = data.num_donors;
 
     const chart = document.getElementById('chart');
     chart.innerHTML = '';

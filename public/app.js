@@ -171,6 +171,7 @@
     tbody.innerHTML = '';
 
     document.getElementById('total-amount').textContent = data.total.toLocaleString();
+    document.getElementById('num-donors').textContent = data.num_donors;
 
     const myIdeal = getMyIdealPcts();
 
