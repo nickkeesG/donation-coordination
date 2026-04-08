@@ -358,6 +358,6 @@
   // Logout
   document.getElementById('logout-btn').addEventListener('click', async () => {
     await fetch(basePath + '/auth/logout', { method: 'POST' });
-    window.location.href = basePath + '/';
+    window.location.replace(basePath + '/');
   });
 })();
