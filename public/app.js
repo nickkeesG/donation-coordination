@@ -263,9 +263,9 @@
           <span>Avg: ${item.ideal_pct.toFixed(1)}%</span>
         </div>
         <div class="agg-card-bars">
-          <span class="bar bar-planned" style="width:${item.planned_pct * scale}px"></span><br>
-          <span class="bar bar-my-ideal" style="width:${myIdealPct * scale}px"></span><br>
-          <span class="bar bar-ideal" style="width:${item.ideal_pct * scale}px"></span>
+          <span class="bar bar-planned" style="width:${(item.planned_pct / globalMax) * 100}%"></span><br>
+          <span class="bar bar-my-ideal" style="width:${(myIdealPct / globalMax) * 100}%"></span><br>
+          <span class="bar bar-ideal" style="width:${(item.ideal_pct / globalMax) * 100}%"></span>
         </div>
       `;
       cards.appendChild(card);
