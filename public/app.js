@@ -45,8 +45,7 @@
         <div class="stepper">
           <button type="button" class="step-btn" data-delta="-10">-10</button>
           <button type="button" class="step-btn" data-delta="-1">-1</button>
-          <input type="number" min="0" max="100" value="${Math.round(val)}" data-area="${area}">
-          <span class="pct-sign">%</span>
+          <span class="pct-box"><input type="number" min="0" max="100" value="${Math.round(val)}" data-area="${area}">%</span>
           <button type="button" class="step-btn" data-delta="1">+1</button>
           <button type="button" class="step-btn" data-delta="10">+10</button>
         </div>
