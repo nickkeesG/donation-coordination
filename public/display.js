@@ -34,11 +34,11 @@
         <div class="row-label">${item.cause_area}</div>
         <div class="row-bars">
           <div class="bar-row">
-            <div class="bar bar-actual" style="width:${actualWidth}%"></div>
+            <div class="bar-track"><div class="bar bar-actual" style="width:${actualWidth}%"></div></div>
             <span class="bar-pct">${item.planned_pct.toFixed(1)}%</span>
           </div>
           <div class="bar-row">
-            <div class="bar bar-ideal" style="width:${idealWidth}%"></div>
+            <div class="bar-track"><div class="bar bar-ideal" style="width:${idealWidth}%"></div></div>
             <span class="bar-pct">${item.ideal_pct.toFixed(1)}%</span>
           </div>
         </div>
