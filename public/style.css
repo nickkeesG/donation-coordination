@@ -40,3 +40,14 @@ th { font-weight: 600; color: #30302e; }
 #save-btn.dirty:hover { background: #b91c1c; }
 #logout-btn { background: #30302e; font-size: 13px; padding: 6px 12px; float: right; }
 #logout-btn:hover { background: #141413; }
+
+@media (max-width: 600px) {
+  body { padding: 10px; }
+  .container { padding: 16px; }
+  .cause-row { flex-wrap: wrap; gap: 4px; }
+  .cause-row .name { width: 100%; }
+  .step-btn { min-width: 30px; padding: 6px 6px; font-size: 12px; }
+  .stepper input[type="number"] { width: 40px; }
+  table { display: block; overflow-x: auto; }
+  .bar { height: 10px; }
+}
