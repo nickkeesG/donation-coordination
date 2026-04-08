@@ -11,10 +11,13 @@ db.pragma('foreign_keys = ON');
 
 // Fixed cause areas
 const CAUSE_AREAS = [
-  'Global Health',
-  'Animal Welfare',
-  'Global Catastrophic Risk',
-  'Other',
+  'GiveWell All Grants',
+  'EA Animal Welfare',
+  'Navigation General (Unrestricted)',
+  'Navigation Cage-Free Accountability',
+  'Longview Nuclear Weapons Policy',
+  'Longview Frontier AI',
+  'Sentinel Bio',
 ];
 
 // Create tables
