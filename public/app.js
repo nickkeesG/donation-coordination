@@ -236,6 +236,9 @@
     }
     const scale = 150 / globalMax;
 
+    const cards = document.getElementById('aggregate-cards');
+    cards.innerHTML = '';
+
     for (const item of data.items) {
       const myIdealPct = myIdeal[item.cause_area] || 0;
       const tr = document.createElement('tr');
@@ -251,6 +254,24 @@
         </td>
       `;
       tbody.appendChild(tr);
+
+      // Mobile card
+      const card = document.createElement('div');
+      card.className = 'agg-card';
+      card.innerHTML = `
+        <div class="agg-card-header">${item.cause_area}</div>
+        <div class="agg-card-numbers">
+          <span>Actual: ${item.planned_pct.toFixed(1)}%</span>
+          <span>My Ideal: ${myIdealPct}%</span>
+          <span>Avg: ${item.ideal_pct.toFixed(1)}%</span>
+        </div>
+        <div class="agg-card-bars">
+          <span class="bar bar-planned" style="width:${item.planned_pct * scale}px"></span><br>
+          <span class="bar bar-my-ideal" style="width:${myIdealPct * scale}px"></span><br>
+          <span class="bar bar-ideal" style="width:${item.ideal_pct * scale}px"></span>
+        </div>
+      `;
+      cards.appendChild(card);
     }
   }
 
@@ -260,11 +281,14 @@
     const data = await res.json();
     const tbody = document.querySelector('#donations-table tbody');
     tbody.innerHTML = '';
+    const cards = document.getElementById('donations-cards');
+    cards.innerHTML = '';
 
     if (data.privacy_active) {
       const tr = document.createElement('tr');
       tr.innerHTML = '<td colspan="3" style="color:#888;font-style:italic">Individual donations are hidden until at least 3 donors choose to be anonymous (to prevent identification by process of elimination).</td>';
       tbody.appendChild(tr);
+      cards.innerHTML = '<div class="donation-card-message">Individual donations are hidden until at least 3 donors choose to be anonymous (to prevent identification by process of elimination).</div>';
       return;
     }
 
@@ -272,18 +296,32 @@
       const tr = document.createElement('tr');
       tr.innerHTML = '<td colspan="3" style="color:#888;font-style:italic">No public donations yet.</td>';
       tbody.appendChild(tr);
+      cards.innerHTML = '<div class="donation-card-message">No public donations yet.</div>';
       return;
     }
 
     for (const d of data.donations) {
-      const tr = document.createElement('tr');
       const alloc = d.items.map(i => `${i.cause_area}: ${i.planned_pct}%`).join(', ');
+
+      const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${d.name}</td>
         <td>$${d.donation_amount.toLocaleString()}</td>
         <td style="font-size:12px">${alloc}</td>
       `;
       tbody.appendChild(tr);
+
+      // Mobile card
+      const card = document.createElement('div');
+      card.className = 'donation-card';
+      card.innerHTML = `
+        <div class="donation-card-header">
+          <span>${d.name}</span>
+          <span>$${d.donation_amount.toLocaleString()}</span>
+        </div>
+        <div class="donation-card-alloc">${d.items.map(i => `${i.cause_area}: ${i.planned_pct}%`).join(' · ')}</div>
+      `;
+      cards.appendChild(card);
     }
   }
 

@@ -41,13 +41,35 @@ th { font-weight: 600; color: #30302e; }
 #logout-btn { background: #30302e; font-size: 13px; padding: 6px 12px; float: right; }
 #logout-btn:hover { background: #141413; }
 
+/* Mobile: aggregate cards */
+.agg-card { display: none; }
+/* Mobile: donation cards */
+.donation-card { display: none; }
+
 @media (max-width: 600px) {
   body { padding: 10px; }
   .container { padding: 16px; }
+
+  /* Cause rows: name + percentage on one line, stepper full-width below */
   .cause-row { flex-wrap: wrap; gap: 4px; }
-  .cause-row .name { width: 100%; }
-  .step-btn { min-width: 30px; padding: 6px 6px; font-size: 12px; }
-  .stepper input[type="number"] { width: 40px; }
-  table { display: block; overflow-x: auto; }
-  .bar { height: 10px; }
+  .cause-row .name { width: auto; flex: 1; }
+  .cause-row .value { width: auto; }
+  .cause-row .stepper { width: 100%; justify-content: center; }
+  .step-btn { min-width: 44px; padding: 8px 6px; font-size: 13px; }
+  .stepper input[type="number"] { width: 48px; }
+
+  /* Hide tables, show cards */
+  #aggregate-table { display: none; }
+  .agg-card { display: block; padding: 10px 0; border-bottom: 1px solid rgba(20, 20, 19, 0.1); font-family: system-ui, sans-serif; font-size: 14px; }
+  .agg-card:last-child { border-bottom: none; }
+  .agg-card-header { font-weight: 600; margin-bottom: 6px; }
+  .agg-card-numbers { display: flex; gap: 12px; margin-bottom: 6px; color: #30302e; font-size: 13px; }
+  .agg-card-bars .bar { height: 12px; margin-bottom: 2px; }
+
+  #donations-table { display: none; }
+  .donation-card { display: block; padding: 10px 0; border-bottom: 1px solid rgba(20, 20, 19, 0.1); font-family: system-ui, sans-serif; font-size: 14px; }
+  .donation-card:last-child { border-bottom: none; }
+  .donation-card-header { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 4px; }
+  .donation-card-alloc { font-size: 12px; color: #30302e; }
+  .donation-card-message { padding: 10px 0; color: #888; font-style: italic; font-family: system-ui, sans-serif; font-size: 14px; }
 }
