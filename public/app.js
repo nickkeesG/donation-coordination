@@ -46,15 +46,14 @@
           <button type="button" class="step-btn" data-delta="-10">-10</button>
           <button type="button" class="step-btn" data-delta="-1">-1</button>
           <input type="number" min="0" max="100" value="${Math.round(val)}" data-area="${area}">
+          <span class="pct-sign">%</span>
           <button type="button" class="step-btn" data-delta="1">+1</button>
           <button type="button" class="step-btn" data-delta="10">+10</button>
         </div>
-        <span class="value">${Math.round(val)}%</span>
       `;
       container.appendChild(row);
 
       const input = row.querySelector('input[type="number"]');
-      const display = row.querySelector('.value');
       inputs[area] = input;
 
       function clampAndUpdate() {
@@ -67,7 +66,6 @@
         let v = parseInt(input.value) || 0;
         v = Math.max(0, Math.min(maxAllowed, v));
         input.value = v;
-        display.textContent = `${v}%`;
         updateTotal(containerId, totalId);
       }
 

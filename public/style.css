@@ -14,7 +14,7 @@ button:hover { background: #c4654a; }
 label { display: block; margin-bottom: 4px; font-weight: 500; font-family: system-ui, sans-serif; font-size: 0.9em; }
 .cause-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .cause-row .name { width: 220px; flex-shrink: 0; font-size: 14px; font-family: system-ui, sans-serif; }
-.cause-row .value { width: 45px; text-align: right; font-size: 14px; font-family: system-ui, sans-serif; }
+.pct-sign { font-size: 14px; font-family: system-ui, sans-serif; color: #30302e; }
 .stepper { display: flex; align-items: center; gap: 4px; }
 input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 input[type="number"]::-webkit-inner-spin-button,
@@ -52,9 +52,8 @@ th { font-weight: 600; color: #30302e; }
 
   /* Cause rows: name + percentage on one line, stepper full-width below */
   .cause-row { flex-wrap: wrap; gap: 4px; }
-  .cause-row .name { width: auto; flex: 1; order: 1; }
-  .cause-row .value { width: auto; order: 2; }
-  .cause-row .stepper { width: 100%; justify-content: center; order: 3; }
+  .cause-row .name { width: auto; flex: 1; }
+  .cause-row .stepper { width: 100%; justify-content: center; }
   .step-btn { min-width: 44px; padding: 8px 6px; font-size: 13px; }
   .stepper input[type="number"] { width: 48px; }
 
