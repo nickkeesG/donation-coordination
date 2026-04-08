@@ -333,6 +333,14 @@
     loadDonations();
   });
 
+  // Reload data when tab becomes visible (SSE may have dropped while idle)
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      loadAggregate();
+      loadDonations();
+    }
+  });
+
   // Logout
   document.getElementById('logout-btn').addEventListener('click', async () => {
     await fetch(basePath + '/auth/logout', { method: 'POST' });
