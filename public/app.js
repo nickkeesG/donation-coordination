@@ -231,7 +231,7 @@
       const myIdealPct = myIdeal[item.cause_area] || 0;
       globalMax = Math.max(globalMax, item.planned_pct, myIdealPct, item.ideal_pct);
     }
-    const scale = 150 / globalMax;
+    const scale = 120 / globalMax;
 
     const cards = document.getElementById('aggregate-cards');
     cards.innerHTML = '';
