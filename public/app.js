@@ -116,6 +116,23 @@
   document.getElementById('is-anon').addEventListener('change', updateNameFieldVisibility);
   updateNameFieldVisibility();
 
+  // Unsaved changes tracking
+  function markDirty() {
+    document.getElementById('unsaved-banner').hidden = false;
+    document.getElementById('save-btn').classList.add('dirty');
+  }
+
+  function markClean() {
+    document.getElementById('unsaved-banner').hidden = true;
+    document.getElementById('save-btn').classList.remove('dirty');
+  }
+
+  document.getElementById('donation-amount').addEventListener('input', markDirty);
+  document.getElementById('is-anon').addEventListener('change', markDirty);
+  document.getElementById('display-name').addEventListener('input', markDirty);
+  document.querySelectorAll('.step-btn').forEach(btn => btn.addEventListener('click', markDirty));
+  document.querySelectorAll('.stepper input[type="number"]').forEach(inp => inp.addEventListener('input', markDirty));
+
   // Save
   document.getElementById('save-btn').addEventListener('click', async () => {
     const items = causeAreas.map(area => ({
@@ -154,6 +171,7 @@
     if (res.ok) {
       document.getElementById('save-status').textContent = 'Saved!';
       document.getElementById('save-status').style.color = '#16a34a';
+      markClean();
       loadAggregate();
       loadDonations();
     } else {
