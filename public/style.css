@@ -52,9 +52,9 @@ th { font-weight: 600; color: #30302e; }
 
   /* Cause rows: name + percentage on one line, stepper full-width below */
   .cause-row { flex-wrap: wrap; gap: 4px; }
-  .cause-row .name { width: auto; flex: 1; }
-  .cause-row .value { width: auto; }
-  .cause-row .stepper { width: 100%; justify-content: center; }
+  .cause-row .name { width: auto; flex: 1; order: 1; }
+  .cause-row .value { width: auto; order: 2; }
+  .cause-row .stepper { width: 100%; justify-content: center; order: 3; }
   .step-btn { min-width: 44px; padding: 8px 6px; font-size: 13px; }
   .stepper input[type="number"] { width: 48px; }
 
