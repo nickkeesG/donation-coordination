@@ -70,25 +70,22 @@
       flex-shrink: 0;
     }
     .row-bars {
-      flex: 1;
       display: flex;
       flex-direction: column;
       gap: 0.6vh;
+      width: 55vw;
     }
     .bar-row {
       display: flex;
       align-items: center;
       gap: 1vw;
     }
-    .bar-track {
-      display: inline-block;
-      width: 55vw;
-    }
     .bar {
       height: 4vh;
       border-radius: 4px;
       transition: width 0.4s ease;
       min-width: 2px;
+      flex-shrink: 0;
     }
     .bar-actual { background: #d97757; }
     .bar-ideal { background: #8b7355; }
