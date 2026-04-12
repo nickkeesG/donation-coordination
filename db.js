@@ -11,7 +11,7 @@ db.pragma('foreign_keys = ON');
 
 // Fixed cause areas
 const CAUSE_AREAS = [
-  'GiveWell All Grants',
+  'GiveWell (Unrestricted)',
   'EA Animal Welfare',
   'Navigation General (Unrestricted)',
   'Navigation Cage-Free Accountability',
@@ -65,6 +65,7 @@ db.exec(`
 
 // Migrations
 try { db.exec('ALTER TABLE allocations ADD COLUMN display_name TEXT DEFAULT ""'); } catch (e) { /* column already exists */ }
+db.exec(`UPDATE allocation_items SET cause_area = 'GiveWell (Unrestricted)' WHERE cause_area = 'GiveWell All Grants'`);
 
 // Prepared statements
 const stmts = {
