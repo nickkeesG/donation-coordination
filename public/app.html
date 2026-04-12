@@ -39,7 +39,14 @@
       <p><strong>Total: <span id="planned-total">0</span>%</strong></p>
     </div>
 
-    <div class="section">
+    <div class="section" style="margin-bottom: 12px">
+      <div class="toggle-row">
+        <input type="checkbox" id="diff-ideal">
+        <label for="diff-ideal" style="margin:0;font-weight:normal">My ideal allocation differs from my planned allocation</label>
+      </div>
+    </div>
+
+    <div class="section" id="ideal-section" hidden>
       <h2>Your Ideal Allocation</h2>
       <p>If you could decide how everyone's donations were split, what would it be?</p>
       <div id="ideal-sliders"></div>
