@@ -31,8 +31,8 @@ th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid rgba(20, 2
 th { font-weight: 600; color: #30302e; }
 .bar { height: 14px; border-radius: 2px; display: inline-block; vertical-align: middle; }
 .bar-planned { background: #d97757; }
-.bar-my-ideal { background: #eda100; }
-.bar-ideal { background: #16a34a; }
+.bar-my-ideal { background: #16a34a; }
+.bar-ideal { background: #eda100; }
 .agg-row { margin-bottom: 12px; font-family: system-ui, sans-serif; }
 .agg-row-label { font-weight: 600; font-size: 21px; margin-bottom: 4px; color: #30302e; }
 .agg-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }

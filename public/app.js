@@ -252,12 +252,12 @@
           <div class="agg-bar-track"><span class="bar bar-planned" style="width:${plannedW}%"></span><span class="agg-bar-pct">${item.planned_pct.toFixed(1)}%</span></div>
         </div>
         <div class="agg-bar-row">
-          <span class="agg-bar-label">My Ideal</span>
-          <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${myIdealW}%"></span><span class="agg-bar-pct">${myIdealPct}%</span></div>
-        </div>
-        <div class="agg-bar-row">
           <span class="agg-bar-label">Avg. Ideal</span>
           <div class="agg-bar-track"><span class="bar bar-ideal" style="width:${idealW}%"></span><span class="agg-bar-pct">${item.ideal_pct.toFixed(1)}%</span></div>
+        </div>
+        <div class="agg-bar-row">
+          <span class="agg-bar-label">My Ideal</span>
+          <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${myIdealW}%"></span><span class="agg-bar-pct">${myIdealPct}%</span></div>
         </div>
       `;
       chart.appendChild(row);
@@ -275,12 +275,12 @@
           <div class="agg-bar-track"><span class="bar bar-planned" style="width:${plannedWMobile}%"></span><span class="agg-bar-pct">${item.planned_pct.toFixed(1)}%</span></div>
         </div>
         <div class="agg-card-bar-row">
-          <span class="agg-bar-label">My Ideal</span>
-          <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${myIdealWMobile}%"></span><span class="agg-bar-pct">${myIdealPct}%</span></div>
-        </div>
-        <div class="agg-card-bar-row">
           <span class="agg-bar-label">Avg. Ideal</span>
           <div class="agg-bar-track"><span class="bar bar-ideal" style="width:${idealWMobile}%"></span><span class="agg-bar-pct">${item.ideal_pct.toFixed(1)}%</span></div>
+        </div>
+        <div class="agg-card-bar-row">
+          <span class="agg-bar-label">My Ideal</span>
+          <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${myIdealWMobile}%"></span><span class="agg-bar-pct">${myIdealPct}%</span></div>
         </div>
       `;
       cards.appendChild(card);
