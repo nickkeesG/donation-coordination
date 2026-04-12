@@ -53,4 +53,9 @@
   // SSE for real-time updates
   const events = new EventSource(basePath + '/api/events');
   events.addEventListener('update', loadAggregate);
+
+  // Reload data when tab becomes visible (SSE may have dropped while idle)
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) loadAggregate();
+  });
 })();
