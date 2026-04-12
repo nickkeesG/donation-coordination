@@ -45,7 +45,7 @@
         <div class="stepper">
           <button type="button" class="step-btn" data-delta="-10">-10</button>
           <button type="button" class="step-btn" data-delta="-1">-1</button>
-          <span class="pct-box"><input type="number" min="0" max="100" value="${Math.round(val)}" data-area="${area}">%</span>
+          <span class="pct-box"><input type="number" min="0" value="${Math.round(val)}" data-area="${area}">%</span>
           <button type="button" class="step-btn" data-delta="1">+1</button>
           <button type="button" class="step-btn" data-delta="10">+10</button>
         </div>
@@ -55,32 +55,20 @@
       const input = row.querySelector('input[type="number"]');
       inputs[area] = input;
 
-      function clampAndUpdate() {
-        // Sum all other inputs in this group
-        let othersTotal = 0;
-        for (const a of causeAreas) {
-          if (a !== area) othersTotal += parseInt(inputs[a].value) || 0;
-        }
-        const maxAllowed = 100 - othersTotal;
+      function onUpdate() {
         let v = parseInt(input.value) || 0;
-        v = Math.max(0, Math.min(maxAllowed, v));
-        input.value = v;
+        if (v < 0) { v = 0; input.value = v; }
         updateTotal(containerId, totalId);
       }
 
-      input.addEventListener('input', clampAndUpdate);
+      input.addEventListener('input', onUpdate);
 
       row.querySelectorAll('.step-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          let othersTotal = 0;
-          for (const a of causeAreas) {
-            if (a !== area) othersTotal += parseInt(inputs[a].value) || 0;
-          }
-          const maxAllowed = 100 - othersTotal;
           let v = parseInt(input.value) || 0;
-          v = Math.max(0, Math.min(maxAllowed, v + parseInt(btn.dataset.delta)));
+          v = Math.max(0, v + parseInt(btn.dataset.delta));
           input.value = v;
-          clampAndUpdate();
+          onUpdate();
         });
       });
     }
@@ -177,8 +165,16 @@
     const plannedSum = items.reduce((s, i) => s + i.planned_pct, 0);
     const idealSum = items.reduce((s, i) => s + i.ideal_pct, 0);
 
-    if (plannedSum !== 100 || idealSum !== 100) {
-      document.getElementById('save-status').textContent = 'Both allocations must sum to 100%';
+    if (plannedSum !== 100 && idealSum !== 100) {
+      document.getElementById('save-status').textContent = `Planned allocation is ${plannedSum}% and ideal is ${idealSum}% — both must sum to 100%`;
+      document.getElementById('save-status').style.color = '#dc2626';
+      return;
+    } else if (plannedSum !== 100) {
+      document.getElementById('save-status').textContent = `Planned allocation is ${plannedSum}% — must sum to 100%`;
+      document.getElementById('save-status').style.color = '#dc2626';
+      return;
+    } else if (idealSum !== 100) {
+      document.getElementById('save-status').textContent = `Ideal allocation is ${idealSum}% — must sum to 100%`;
       document.getElementById('save-status').style.color = '#dc2626';
       return;
     }
