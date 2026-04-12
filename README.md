@@ -33,7 +33,7 @@ public/
 
 - `/` - Login page (enter email to receive magic link)
 - `/app.html` - Main app (enter donations, view aggregate with personal ideal comparison)
-- `/display.html` - Big screen display (aggregate only: Actual vs Avg. Ideal, landscape-optimized, requires login)
+- `/display.html` - Big screen display (aggregate only: Actual vs Avg. Ideal, landscape-optimized, requires login, desktop only — redirects to app on mobile)
 
 ### API endpoints
 
@@ -119,11 +119,12 @@ nginx -t && systemctl reload nginx
 
 ## Cause areas
 
-Currently fixed in `db.js`: Global Health, Animal Welfare, Global Catastrophic Risk, Other. Changing the list requires updating the `CAUSE_AREAS` array and deleting the database to start fresh.
+Currently fixed in `db.js`. Renaming a cause area requires adding a migration `UPDATE` statement in the migrations section of `db.js` to update existing data (see the `GiveWell All Grants` → `GiveWell (Unrestricted)` rename as an example).
 
 ## Key design decisions
 
-- **Allocation inputs**: Number fields with -10/-1/+1/+10 stepper buttons (mobile-friendly). Values are clamped so the total can never exceed 100%.
+- **Allocation inputs**: Number fields with -10/-1/+1/+10 stepper buttons (mobile-friendly). Values are unclamped; validation that totals equal 100% happens only on save.
+- **Ideal allocation**: Hidden by default behind a "My ideal allocation differs from my planned allocation" checkbox. When unchecked, ideal values are copied from planned on save. Auto-checked for existing users whose planned and ideal values differ.
 - **Ideal weighting**: The "Avg. Ideal" is weighted by donation amount (larger donors have proportionally more influence on the averaged ideal).
 - **Magic link sessions**: 7-day expiry. Firefox's enhanced tracking protection may shorten cookie lifetime in practice.
 - **Database migrations**: Simple try/catch ALTER TABLE statements in `db.js` for adding columns to existing databases.
