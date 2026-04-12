@@ -77,6 +77,7 @@ th { font-weight: 600; color: #30302e; }
   .agg-card-numbers { display: flex; gap: 12px; margin-bottom: 6px; color: #30302e; font-size: 13px; }
   .agg-card-bars .bar { height: 12px; margin-bottom: 2px; }
 
+  #fullscreen-btn { display: none; }
   #donations-table { display: none; }
   .donation-card { display: block; padding: 10px 0; border-bottom: 1px solid rgba(20, 20, 19, 0.1); font-family: system-ui, sans-serif; font-size: 14px; }
   .donation-card:last-child { border-bottom: none; }

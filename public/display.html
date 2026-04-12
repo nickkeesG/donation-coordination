@@ -107,6 +107,12 @@
     <span><span class="swatch swatch-ideal"></span> Avg. Ideal</span>
   </div>
   <div class="chart" id="chart"></div>
+  <script>
+    if (window.innerWidth <= 600) {
+      const base = window.location.pathname.replace(/display\.html.*$/, '');
+      window.location.replace(base + 'app.html');
+    }
+  </script>
   <script src="display.js"></script>
 </body>
 </html>
