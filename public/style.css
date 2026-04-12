@@ -64,8 +64,8 @@ th { font-weight: 600; color: #30302e; }
   th, td { font-size: 14px; }
 
   /* Cause rows: name on one line, stepper full-width below with flexible buttons */
-  .cause-row { flex-wrap: wrap; gap: 4px; }
-  .cause-row .name { width: auto; flex: 1; }
+  .cause-row { flex-direction: column; gap: 4px; }
+  .cause-row .name { width: auto; }
   .cause-row .stepper { width: 100%; max-width: 320px; }
   .step-btn { flex: 1; min-width: 0; max-width: 60px; padding: 8px 0; font-size: 12px; text-align: center; }
 
