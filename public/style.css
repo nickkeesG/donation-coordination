@@ -32,13 +32,11 @@ th { font-weight: 600; color: #30302e; }
 .bar { height: 14px; border-radius: 2px; display: inline-block; vertical-align: middle; }
 .bar-planned { background: #d97757; }
 .bar-my-ideal { background: #eda100; }
-.bar-ideal { background: #8b7355; }
-.legend { display: flex; gap: 16px; margin-bottom: 8px; font-size: 20px; font-family: system-ui, sans-serif; }
-.legend span { display: flex; align-items: center; gap: 4px; }
-.legend .swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+.bar-ideal { background: #16a34a; }
 .agg-row { margin-bottom: 12px; font-family: system-ui, sans-serif; }
 .agg-row-label { font-weight: 600; font-size: 21px; margin-bottom: 4px; color: #30302e; }
 .agg-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+.agg-bar-label { font-size: 16px; color: #30302e; width: 80px; flex-shrink: 0; white-space: nowrap; }
 .agg-bar-row .bar { flex-shrink: 0; }
 .agg-bar-pct { font-size: 20px; color: #30302e; white-space: nowrap; }
 .unsaved-hint { color: #dc2626; font-size: 0.75em; font-weight: 400; }
@@ -60,8 +58,8 @@ th { font-weight: 600; color: #30302e; }
   .pct-box { font-size: 14px; }
   .stepper .pct-box input[type="number"] { width: 36px; font-size: 14px; }
   .step-btn { font-size: 12px; min-width: 0; padding: 8px 0; }
-  .legend { font-size: 13px; }
   th, td { font-size: 14px; }
+  .agg-bar-label { font-size: 12px; width: 65px; }
 
   /* Cause rows: name on one line, stepper full-width below with flexible buttons */
   .cause-row { flex-direction: column; gap: 4px; }
@@ -74,8 +72,9 @@ th { font-weight: 600; color: #30302e; }
   .agg-card { display: block; padding: 10px 0; border-bottom: 1px solid rgba(20, 20, 19, 0.1); font-family: system-ui, sans-serif; font-size: 14px; }
   .agg-card:last-child { border-bottom: none; }
   .agg-card-header { font-weight: 600; margin-bottom: 6px; }
-  .agg-card-numbers { display: flex; gap: 12px; margin-bottom: 6px; color: #30302e; font-size: 13px; }
-  .agg-card-bars .bar { height: 12px; margin-bottom: 2px; }
+  .agg-card-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+  .agg-card-bar-row .bar { height: 12px; flex-shrink: 0; }
+  .agg-card-bar-row .agg-bar-pct { font-size: 13px; }
 
   #fullscreen-btn { display: none; }
   #donations-table { display: none; }
