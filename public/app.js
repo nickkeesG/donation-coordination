@@ -242,24 +242,24 @@
       // Desktop bar chart
       const row = document.createElement('div');
       row.className = 'agg-row';
-      const plannedW = globalMax > 0 ? (item.planned_pct / globalMax) * 85 : 0;
-      const myIdealW = globalMax > 0 ? (myIdealPct / globalMax) * 85 : 0;
-      const idealW = globalMax > 0 ? (item.ideal_pct / globalMax) * 85 : 0;
+      const plannedW = globalMax > 0 ? (item.planned_pct / globalMax) * 100 : 0;
+      const myIdealW = globalMax > 0 ? (myIdealPct / globalMax) * 100 : 0;
+      const idealW = globalMax > 0 ? (item.ideal_pct / globalMax) * 100 : 0;
       row.innerHTML = `
         <div class="agg-row-label">${item.cause_area}</div>
         <div class="agg-bar-row">
           <span class="agg-bar-label">Actual</span>
-          <span class="bar bar-planned" style="width:${plannedW}%"></span>
+          <div class="agg-bar-track"><span class="bar bar-planned" style="width:${plannedW}%"></span></div>
           <span class="agg-bar-pct">${item.planned_pct.toFixed(1)}%</span>
         </div>
         <div class="agg-bar-row">
           <span class="agg-bar-label">My Ideal</span>
-          <span class="bar bar-my-ideal" style="width:${myIdealW}%"></span>
+          <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${myIdealW}%"></span></div>
           <span class="agg-bar-pct">${myIdealPct}%</span>
         </div>
         <div class="agg-bar-row">
           <span class="agg-bar-label">Avg. Ideal</span>
-          <span class="bar bar-ideal" style="width:${idealW}%"></span>
+          <div class="agg-bar-track"><span class="bar bar-ideal" style="width:${idealW}%"></span></div>
           <span class="agg-bar-pct">${item.ideal_pct.toFixed(1)}%</span>
         </div>
       `;
@@ -275,17 +275,17 @@
         <div class="agg-card-header">${item.cause_area}</div>
         <div class="agg-card-bar-row">
           <span class="agg-bar-label">Actual</span>
-          <span class="bar bar-planned" style="width:${plannedWMobile}%"></span>
+          <div class="agg-bar-track"><span class="bar bar-planned" style="width:${plannedWMobile}%"></span></div>
           <span class="agg-bar-pct">${item.planned_pct.toFixed(1)}%</span>
         </div>
         <div class="agg-card-bar-row">
           <span class="agg-bar-label">My Ideal</span>
-          <span class="bar bar-my-ideal" style="width:${myIdealWMobile}%"></span>
+          <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${myIdealWMobile}%"></span></div>
           <span class="agg-bar-pct">${myIdealPct}%</span>
         </div>
         <div class="agg-card-bar-row">
           <span class="agg-bar-label">Avg. Ideal</span>
-          <span class="bar bar-ideal" style="width:${idealWMobile}%"></span>
+          <div class="agg-bar-track"><span class="bar bar-ideal" style="width:${idealWMobile}%"></span></div>
           <span class="agg-bar-pct">${item.ideal_pct.toFixed(1)}%</span>
         </div>
       `;

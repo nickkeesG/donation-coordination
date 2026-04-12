@@ -37,8 +37,9 @@ th { font-weight: 600; color: #30302e; }
 .agg-row-label { font-weight: 600; font-size: 21px; margin-bottom: 4px; color: #30302e; }
 .agg-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
 .agg-bar-label { font-size: 16px; color: #30302e; width: 80px; flex-shrink: 0; white-space: nowrap; }
-.agg-bar-row .bar { flex-shrink: 0; }
-.agg-bar-pct { font-size: 20px; color: #30302e; white-space: nowrap; }
+.agg-bar-track { flex: 1; min-width: 0; }
+.agg-bar-track .bar { display: block; }
+.agg-bar-pct { font-size: 20px; color: #30302e; white-space: nowrap; flex-shrink: 0; width: 60px; text-align: right; }
 .unsaved-hint { color: #dc2626; font-size: 0.75em; font-weight: 400; }
 #save-btn.dirty { background: #dc2626; }
 #save-btn.dirty:hover { background: #b91c1c; }
@@ -73,8 +74,9 @@ th { font-weight: 600; color: #30302e; }
   .agg-card:last-child { border-bottom: none; }
   .agg-card-header { font-weight: 600; margin-bottom: 6px; }
   .agg-card-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
-  .agg-card-bar-row .bar { height: 12px; flex-shrink: 0; }
-  .agg-card-bar-row .agg-bar-pct { font-size: 13px; }
+  .agg-card-bar-row .bar { height: 12px; }
+  .agg-card-bar-row .agg-bar-pct { font-size: 13px; width: 45px; }
+  .agg-card-bar-row .agg-bar-track { flex: 1; min-width: 0; }
 
   #fullscreen-btn { display: none; }
   #donations-table { display: none; }
