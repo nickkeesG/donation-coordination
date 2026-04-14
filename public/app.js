@@ -230,8 +230,9 @@
   // Get current user's ideal percentages from sliders
   function getMyIdealPcts() {
     const pcts = {};
+    const diffIdeal = document.getElementById('diff-ideal').checked;
     for (const area of causeAreas) {
-      pcts[area] = parseInt(idealSliders[area].value);
+      pcts[area] = diffIdeal ? parseInt(idealSliders[area].value) : parseInt(plannedSliders[area].value);
     }
     return pcts;
   }
