@@ -16,9 +16,10 @@
     return res;
   }
 
-  // Load cause areas
+  // Load cause areas (structured by category)
   const caRes = await fetch(basePath + '/api/cause-areas');
-  causeAreas = await caRes.json();
+  const causeAreaCategories = await caRes.json();
+  causeAreas = causeAreaCategories.flatMap(c => c.funds);
 
   // Load current user data
   const meRes = await apiFetch(basePath + '/api/me');
@@ -28,49 +29,56 @@
   const sessionEmail = me.email || '';
   document.getElementById('user-email').textContent = sessionEmail ? `Logged in as ${sessionEmail}` : '';
 
-  // Build number inputs with +/- buttons for a group
+  // Build number inputs with +/- buttons for a group, organized by category
   function buildInputs(containerId, totalId, type) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
     const inputs = {};
 
-    for (const area of causeAreas) {
-      const existing = me.items ? me.items.find(i => i.cause_area === area) : null;
-      const val = existing ? existing[type] : 0;
+    for (const cat of causeAreaCategories) {
+      const header = document.createElement('div');
+      header.className = 'category-header';
+      header.textContent = cat.category;
+      container.appendChild(header);
 
-      const row = document.createElement('div');
-      row.className = 'cause-row';
-      row.innerHTML = `
-        <span class="name">${area}</span>
-        <div class="stepper">
-          <button type="button" class="step-btn" data-delta="-10">-10</button>
-          <button type="button" class="step-btn" data-delta="-1">-1</button>
-          <span class="pct-box"><input type="number" min="0" value="${Math.round(val)}" data-area="${area}">%</span>
-          <button type="button" class="step-btn" data-delta="1">+1</button>
-          <button type="button" class="step-btn" data-delta="10">+10</button>
-        </div>
-      `;
-      container.appendChild(row);
+      for (const area of cat.funds) {
+        const existing = me.items ? me.items.find(i => i.cause_area === area) : null;
+        const val = existing ? existing[type] : 0;
 
-      const input = row.querySelector('input[type="number"]');
-      inputs[area] = input;
+        const row = document.createElement('div');
+        row.className = 'cause-row';
+        row.innerHTML = `
+          <span class="name">${area}</span>
+          <div class="stepper">
+            <button type="button" class="step-btn" data-delta="-10">-10</button>
+            <button type="button" class="step-btn" data-delta="-1">-1</button>
+            <span class="pct-box"><input type="number" min="0" value="${Math.round(val)}" data-area="${area}">%</span>
+            <button type="button" class="step-btn" data-delta="1">+1</button>
+            <button type="button" class="step-btn" data-delta="10">+10</button>
+          </div>
+        `;
+        container.appendChild(row);
 
-      function onUpdate() {
-        let v = parseInt(input.value) || 0;
-        if (v < 0) { v = 0; input.value = v; }
-        updateTotal(containerId, totalId);
-      }
+        const input = row.querySelector('input[type="number"]');
+        inputs[area] = input;
 
-      input.addEventListener('input', onUpdate);
-
-      row.querySelectorAll('.step-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        function onUpdate() {
           let v = parseInt(input.value) || 0;
-          v = Math.max(0, v + parseInt(btn.dataset.delta));
-          input.value = v;
-          onUpdate();
+          if (v < 0) { v = 0; input.value = v; }
+          updateTotal(containerId, totalId);
+        }
+
+        input.addEventListener('input', onUpdate);
+
+        row.querySelectorAll('.step-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            let v = parseInt(input.value) || 0;
+            v = Math.max(0, v + parseInt(btn.dataset.delta));
+            input.value = v;
+            onUpdate();
+          });
         });
-      });
+      }
     }
 
     updateTotal(containerId, totalId);
@@ -228,6 +236,27 @@
     return pcts;
   }
 
+  // Helper to render 3 bars (Actual, Avg. Ideal, My Ideal) and return HTML
+  function renderBars(planned, ideal, myIdealPct, globalMax) {
+    const plannedW = globalMax > 0 ? (planned / globalMax) * 100 : 0;
+    const idealW = globalMax > 0 ? (ideal / globalMax) * 100 : 0;
+    const myIdealW = globalMax > 0 ? (myIdealPct / globalMax) * 100 : 0;
+    return `
+      <div class="agg-bar-row">
+        <span class="agg-bar-label">Actual</span>
+        <div class="agg-bar-track"><span class="bar bar-planned" style="width:${plannedW}%"></span><span class="agg-bar-pct">${planned.toFixed(1)}%</span></div>
+      </div>
+      <div class="agg-bar-row">
+        <span class="agg-bar-label">Avg. Ideal</span>
+        <div class="agg-bar-track"><span class="bar bar-ideal" style="width:${idealW}%"></span><span class="agg-bar-pct">${ideal.toFixed(1)}%</span></div>
+      </div>
+      <div class="agg-bar-row">
+        <span class="agg-bar-label">My Ideal</span>
+        <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${myIdealW}%"></span><span class="agg-bar-pct">${myIdealPct.toFixed(1)}%</span></div>
+      </div>
+    `;
+  }
+
   // Load aggregate
   async function loadAggregate() {
     const res = await apiFetch(basePath + '/api/aggregate');
@@ -237,70 +266,87 @@
     document.getElementById('num-donors').textContent = data.num_donors;
 
     const myIdeal = getMyIdealPcts();
+    const itemMap = Object.fromEntries(data.items.map(i => [i.cause_area, i]));
 
-    // Use a single scale across all rows so bars are comparable
+    // Compute category-level sums for globalMax calculation
+    const catSums = causeAreaCategories.map(cat => {
+      let planned = 0, ideal = 0, myI = 0;
+      for (const f of cat.funds) {
+        const item = itemMap[f] || { planned_pct: 0, ideal_pct: 0 };
+        planned += item.planned_pct;
+        ideal += item.ideal_pct;
+        myI += (myIdeal[f] || 0);
+      }
+      return { planned, ideal, myI };
+    });
+
+    // globalMax from category sums (always >= individual fund values)
     let globalMax = 1;
-    for (const item of data.items) {
-      const myIdealPct = myIdeal[item.cause_area] || 0;
-      globalMax = Math.max(globalMax, item.planned_pct, myIdealPct, item.ideal_pct);
+    for (const s of catSums) {
+      globalMax = Math.max(globalMax, s.planned, s.ideal, s.myI);
     }
 
     // Desktop chart
     const chart = document.getElementById('aggregate-chart');
     chart.innerHTML = '';
 
+    // Mobile cards
     const cards = document.getElementById('aggregate-cards');
     cards.innerHTML = '';
 
-    for (const item of data.items) {
-      const myIdealPct = myIdeal[item.cause_area] || 0;
+    causeAreaCategories.forEach((cat, ci) => {
+      const cs = catSums[ci];
 
-      // Desktop bar chart
-      const row = document.createElement('div');
-      row.className = 'agg-row';
-      const plannedW = globalMax > 0 ? (item.planned_pct / globalMax) * 100 : 0;
-      const myIdealW = globalMax > 0 ? (myIdealPct / globalMax) * 100 : 0;
-      const idealW = globalMax > 0 ? (item.ideal_pct / globalMax) * 100 : 0;
-      row.innerHTML = `
-        <div class="agg-row-label">${item.cause_area}</div>
-        <div class="agg-bar-row">
-          <span class="agg-bar-label">Actual</span>
-          <div class="agg-bar-track"><span class="bar bar-planned" style="width:${plannedW}%"></span><span class="agg-bar-pct">${item.planned_pct.toFixed(1)}%</span></div>
-        </div>
-        <div class="agg-bar-row">
-          <span class="agg-bar-label">Avg. Ideal</span>
-          <div class="agg-bar-track"><span class="bar bar-ideal" style="width:${idealW}%"></span><span class="agg-bar-pct">${item.ideal_pct.toFixed(1)}%</span></div>
-        </div>
-        <div class="agg-bar-row">
-          <span class="agg-bar-label">My Ideal</span>
-          <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${myIdealW}%"></span><span class="agg-bar-pct">${myIdealPct}%</span></div>
-        </div>
-      `;
-      chart.appendChild(row);
+      // --- Desktop: category row ---
+      const catRow = document.createElement('div');
+      catRow.className = 'agg-category';
+      catRow.innerHTML = `<div class="agg-row-label">${cat.category}</div>` + renderBars(cs.planned, cs.ideal, cs.myI, globalMax);
+      chart.appendChild(catRow);
 
-      // Mobile card
-      const card = document.createElement('div');
-      card.className = 'agg-card';
-      const plannedWMobile = globalMax > 0 ? (item.planned_pct / globalMax) * 100 : 0;
-      const myIdealWMobile = globalMax > 0 ? (myIdealPct / globalMax) * 100 : 0;
-      const idealWMobile = globalMax > 0 ? (item.ideal_pct / globalMax) * 100 : 0;
-      card.innerHTML = `
-        <div class="agg-card-header">${item.cause_area}</div>
-        <div class="agg-card-bar-row">
-          <span class="agg-bar-label">Actual</span>
-          <div class="agg-bar-track"><span class="bar bar-planned" style="width:${plannedWMobile}%"></span><span class="agg-bar-pct">${item.planned_pct.toFixed(1)}%</span></div>
-        </div>
-        <div class="agg-card-bar-row">
-          <span class="agg-bar-label">Avg. Ideal</span>
-          <div class="agg-bar-track"><span class="bar bar-ideal" style="width:${idealWMobile}%"></span><span class="agg-bar-pct">${item.ideal_pct.toFixed(1)}%</span></div>
-        </div>
-        <div class="agg-card-bar-row">
-          <span class="agg-bar-label">My Ideal</span>
-          <div class="agg-bar-track"><span class="bar bar-my-ideal" style="width:${myIdealWMobile}%"></span><span class="agg-bar-pct">${myIdealPct}%</span></div>
-        </div>
-      `;
-      cards.appendChild(card);
-    }
+      const fundsContainer = document.createElement('div');
+      fundsContainer.className = 'agg-category-funds';
+      fundsContainer.hidden = true;
+
+      for (const fund of cat.funds) {
+        const item = itemMap[fund] || { planned_pct: 0, ideal_pct: 0 };
+        const myIdealPct = myIdeal[fund] || 0;
+        const fundRow = document.createElement('div');
+        fundRow.className = 'agg-fund-row';
+        fundRow.innerHTML = `<div class="agg-row-label">${fund}</div>` + renderBars(item.planned_pct, item.ideal_pct, myIdealPct, globalMax);
+        fundsContainer.appendChild(fundRow);
+      }
+      chart.appendChild(fundsContainer);
+
+      catRow.addEventListener('click', () => {
+        fundsContainer.hidden = !fundsContainer.hidden;
+        catRow.classList.toggle('expanded');
+      });
+
+      // --- Mobile: category card ---
+      const catCard = document.createElement('div');
+      catCard.className = 'agg-card agg-category-card';
+      catCard.innerHTML = `<div class="agg-card-header">${cat.category}</div>` + renderBars(cs.planned, cs.ideal, cs.myI, globalMax).replace(/agg-bar-row/g, 'agg-card-bar-row');
+      cards.appendChild(catCard);
+
+      const fundsCards = document.createElement('div');
+      fundsCards.className = 'agg-category-funds';
+      fundsCards.hidden = true;
+
+      for (const fund of cat.funds) {
+        const item = itemMap[fund] || { planned_pct: 0, ideal_pct: 0 };
+        const myIdealPct = myIdeal[fund] || 0;
+        const fundCard = document.createElement('div');
+        fundCard.className = 'agg-card agg-fund-card';
+        fundCard.innerHTML = `<div class="agg-card-header">${fund}</div>` + renderBars(item.planned_pct, item.ideal_pct, myIdealPct, globalMax).replace(/agg-bar-row/g, 'agg-card-bar-row');
+        fundsCards.appendChild(fundCard);
+      }
+      cards.appendChild(fundsCards);
+
+      catCard.addEventListener('click', () => {
+        fundsCards.hidden = !fundsCards.hidden;
+        catCard.classList.toggle('expanded');
+      });
+    });
   }
 
   // Load public donations

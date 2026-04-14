@@ -3,6 +3,28 @@
   pathParts.pop();
   const basePath = pathParts.join('/') || '';
 
+  // Load cause area categories for grouping
+  const caRes = await fetch(basePath + '/api/cause-areas');
+  const causeAreaCategories = await caRes.json();
+
+  // Helper to render 2 bars (Actual, Avg. Ideal) and return HTML
+  function renderBars(planned, ideal, globalMax) {
+    const actualWidth = globalMax > 0 ? (planned / globalMax) * 100 : 0;
+    const idealWidth = globalMax > 0 ? (ideal / globalMax) * 100 : 0;
+    return `
+      <div class="row-bars">
+        <div class="bar-row">
+          <div class="bar bar-actual" style="width:${actualWidth}%"></div>
+          <span class="bar-pct">${planned.toFixed(1)}%</span>
+        </div>
+        <div class="bar-row">
+          <div class="bar bar-ideal" style="width:${idealWidth}%"></div>
+          <span class="bar-pct">${ideal.toFixed(1)}%</span>
+        </div>
+      </div>
+    `;
+  }
+
   async function loadAggregate() {
     const res = await fetch(basePath + '/api/aggregate');
     if (res.status === 401) {
@@ -17,34 +39,53 @@
     const chart = document.getElementById('chart');
     chart.innerHTML = '';
 
-    // Find global max for consistent bar scaling
+    const itemMap = Object.fromEntries(data.items.map(i => [i.cause_area, i]));
+
+    // Compute category-level sums
+    const catSums = causeAreaCategories.map(cat => {
+      let planned = 0, ideal = 0;
+      for (const f of cat.funds) {
+        const item = itemMap[f] || { planned_pct: 0, ideal_pct: 0 };
+        planned += item.planned_pct;
+        ideal += item.ideal_pct;
+      }
+      return { planned, ideal };
+    });
+
+    // globalMax from category sums
     let globalMax = 1;
-    for (const item of data.items) {
-      globalMax = Math.max(globalMax, item.planned_pct, item.ideal_pct);
+    for (const s of catSums) {
+      globalMax = Math.max(globalMax, s.planned, s.ideal);
     }
 
-    for (const item of data.items) {
-      const row = document.createElement('div');
-      row.className = 'row';
+    causeAreaCategories.forEach((cat, ci) => {
+      const cs = catSums[ci];
 
-      const actualWidth = (item.planned_pct / globalMax) * 100;
-      const idealWidth = (item.ideal_pct / globalMax) * 100;
+      // Category row
+      const catRow = document.createElement('div');
+      catRow.className = 'row cat-row';
+      catRow.innerHTML = `<div class="row-label">${cat.category}</div>` + renderBars(cs.planned, cs.ideal, globalMax);
+      chart.appendChild(catRow);
 
-      row.innerHTML = `
-        <div class="row-label">${item.cause_area}</div>
-        <div class="row-bars">
-          <div class="bar-row">
-            <div class="bar bar-actual" style="width:${actualWidth}%"></div>
-            <span class="bar-pct">${item.planned_pct.toFixed(1)}%</span>
-          </div>
-          <div class="bar-row">
-            <div class="bar bar-ideal" style="width:${idealWidth}%"></div>
-            <span class="bar-pct">${item.ideal_pct.toFixed(1)}%</span>
-          </div>
-        </div>
-      `;
-      chart.appendChild(row);
-    }
+      // Collapsible fund rows
+      const fundsContainer = document.createElement('div');
+      fundsContainer.className = 'cat-funds';
+      fundsContainer.hidden = true;
+
+      for (const fund of cat.funds) {
+        const item = itemMap[fund] || { planned_pct: 0, ideal_pct: 0 };
+        const fundRow = document.createElement('div');
+        fundRow.className = 'row fund-row';
+        fundRow.innerHTML = `<div class="row-label">${fund}</div>` + renderBars(item.planned_pct, item.ideal_pct, globalMax);
+        fundsContainer.appendChild(fundRow);
+      }
+      chart.appendChild(fundsContainer);
+
+      catRow.addEventListener('click', () => {
+        fundsContainer.hidden = !fundsContainer.hidden;
+        catRow.classList.toggle('expanded');
+      });
+    });
   }
 
   // Initial load

@@ -18,7 +18,7 @@ router.get('/events', requireAuth, (req, res) => {
 
 // Get cause areas list
 router.get('/cause-areas', (req, res) => {
-  res.json(db.CAUSE_AREAS);
+  res.json(db.CAUSE_AREA_CATEGORIES);
 });
 
 // Get current user's allocation

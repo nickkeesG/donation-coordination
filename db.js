@@ -9,17 +9,36 @@ const db = new Database(path.join(__dirname, dbFile));
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
-// Fixed cause areas
-const CAUSE_AREAS = [
-  'GiveWell (Unrestricted)',
-  'EA Animal Welfare',
-  'Navigation General (Unrestricted)',
-  'Navigation Cage-Free Accountability',
-  'Longview Nuclear Weapons Policy',
-  'Longview Frontier AI',
-  'Sentinel Bio',
-  'Other',
+// Cause areas grouped by category
+const CAUSE_AREA_CATEGORIES = [
+  {
+    category: 'Global Health & Poverty',
+    funds: ['GiveWell (Unrestricted)', 'Lead Exposure Action'],
+  },
+  {
+    category: 'Animal Welfare',
+    funds: ['EA Animal Welfare', 'Navigation Cage-Free Accountability'],
+  },
+  {
+    category: 'General / Multi-Cause',
+    funds: ['Navigation General (Unrestricted)'],
+  },
+  {
+    category: 'Democracy',
+    funds: ['Democracy Defense in Depth'],
+  },
+  {
+    category: 'Catastrophic Risk (Non-AI)',
+    funds: ['Longview Nuclear Weapons Policy', 'Sentinel Bio'],
+  },
+  {
+    category: 'AI Safety',
+    funds: ['Longview Frontier AI', 'AI Safety Tactical Opportunities Fund', 'Astralis Foundation'],
+  },
 ];
+
+// Flat list derived from categories (used for validation and sorting)
+const CAUSE_AREAS = CAUSE_AREA_CATEGORIES.flatMap(c => c.funds);
 
 // Create tables
 db.exec(`
@@ -65,7 +84,6 @@ db.exec(`
 
 // Migrations
 try { db.exec('ALTER TABLE allocations ADD COLUMN display_name TEXT DEFAULT ""'); } catch (e) { /* column already exists */ }
-db.exec(`UPDATE allocation_items SET cause_area = 'GiveWell (Unrestricted)' WHERE cause_area = 'GiveWell All Grants'`);
 
 // Prepared statements
 const stmts = {
@@ -226,6 +244,7 @@ function getPublicDonations() {
 
 module.exports = {
   CAUSE_AREAS,
+  CAUSE_AREA_CATEGORIES,
   createMagicLink,
   verifyMagicLink,
   createSession,

@@ -45,6 +45,47 @@ th { font-weight: 600; color: #30302e; }
 #logout-btn { background: #30302e; font-size: 13px; padding: 6px 12px; float: right; }
 #logout-btn:hover { background: #141413; }
 
+/* Category headers in form */
+.category-header {
+  font-weight: 600;
+  font-size: 18px;
+  font-family: system-ui, sans-serif;
+  color: #30302e;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(20, 20, 19, 0.15);
+  padding-bottom: 4px;
+}
+.category-header:first-child { margin-top: 0; }
+
+/* Aggregate: collapsible categories */
+.agg-category {
+  margin-bottom: 4px;
+  font-family: system-ui, sans-serif;
+  cursor: pointer;
+  padding: 6px 0;
+  border-radius: 3px;
+}
+.agg-category:hover { background: rgba(20, 20, 19, 0.04); }
+.agg-category .agg-row-label { font-weight: 700; font-size: 21px; }
+.agg-category .agg-row-label::before {
+  content: '\25B6';
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+.agg-category.expanded .agg-row-label::before { transform: rotate(90deg); }
+
+.agg-category-funds {
+  padding-left: 24px;
+  border-left: 2px solid rgba(20, 20, 19, 0.1);
+  margin-left: 8px;
+  margin-bottom: 8px;
+}
+.agg-fund-row { margin-bottom: 8px; font-family: system-ui, sans-serif; }
+.agg-fund-row .agg-row-label { font-weight: 500; font-size: 19px; color: #555; }
+
 /* Mobile: aggregate cards */
 .agg-card { display: none; }
 /* Mobile: donation cards */
@@ -67,6 +108,8 @@ th { font-weight: 600; color: #30302e; }
   .cause-row .stepper { width: 100%; max-width: 320px; }
   .step-btn { flex: 1; min-width: 0; max-width: 60px; padding: 8px 0; font-size: 12px; text-align: center; }
 
+  .category-header { font-size: 15px; margin-top: 12px; }
+
   /* Hide desktop chart/tables, show cards */
   #aggregate-chart { display: none; }
   .agg-card { display: block; padding: 10px 0; border-bottom: 1px solid rgba(20, 20, 19, 0.1); font-family: system-ui, sans-serif; font-size: 14px; }
@@ -76,6 +119,20 @@ th { font-weight: 600; color: #30302e; }
   .agg-card-bar-row .bar { height: 12px; }
   .agg-card-bar-row .agg-bar-pct { font-size: 13px; }
   .agg-card-bar-row .agg-bar-track { flex: 1; min-width: 0; }
+
+  /* Mobile: collapsible category cards */
+  .agg-category-card { cursor: pointer; }
+  .agg-category-card .agg-card-header { font-weight: 700; }
+  .agg-category-card .agg-card-header::before {
+    content: '\25B6';
+    display: inline-block;
+    margin-right: 6px;
+    font-size: 11px;
+    transition: transform 0.2s;
+  }
+  .agg-category-card.expanded .agg-card-header::before { transform: rotate(90deg); }
+  .agg-category-funds { padding-left: 12px; border-left: 2px solid rgba(20, 20, 19, 0.1); margin-left: 4px; }
+  .agg-fund-card .agg-card-header { font-weight: 500; color: #555; }
 
   #fullscreen-btn { display: none; }
   #donations-table { display: none; }
