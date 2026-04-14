@@ -17,26 +17,26 @@
     }
     .header {
       text-align: center;
-      margin-bottom: 1.5vh;
+      margin-bottom: 1vh;
     }
     .header h1 {
-      font-size: 4vh;
+      font-size: 3.5vh;
       font-weight: 400;
       letter-spacing: -0.01em;
-      margin-bottom: 0.5vh;
+      margin-bottom: 0.3vh;
     }
     .header .total {
       font-family: system-ui, sans-serif;
-      font-size: 2.5vh;
+      font-size: 2vh;
       color: #30302e;
     }
     .legend {
       display: flex;
       justify-content: center;
       gap: 3vw;
-      margin-bottom: 1.5vh;
+      margin-bottom: 1vh;
       font-family: system-ui, sans-serif;
-      font-size: 2vh;
+      font-size: 1.8vh;
     }
     .legend span {
       display: flex;
@@ -55,33 +55,33 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: space-evenly;
+      justify-content: space-between;
     }
     .row {
       display: flex;
       align-items: center;
-      gap: 2vw;
+      gap: 1.5vw;
     }
     .row-label {
       width: 22vw;
       text-align: right;
-      font-size: 2.5vh;
+      font-size: 2vh;
       flex-shrink: 0;
     }
     .row-bars {
       display: flex;
       flex-direction: column;
-      gap: 0.3vh;
+      gap: 0.2vh;
       width: 55vw;
     }
     .bar-row {
       display: flex;
       align-items: center;
-      gap: 1vw;
+      gap: 0.8vw;
     }
     .bar {
-      height: 2.8vh;
-      border-radius: 4px;
+      height: 2vh;
+      border-radius: 3px;
       transition: width 0.4s ease;
       min-width: 2px;
       flex-shrink: 0;
@@ -90,27 +90,34 @@
     .bar-ideal { background: #eda100; }
     .bar-pct {
       font-family: system-ui, sans-serif;
-      font-size: 2vh;
+      font-size: 1.6vh;
       color: #30302e;
       white-space: nowrap;
     }
     .cat-row {
-      padding: 0.5vh 0;
+      padding: 0.3vh 0;
     }
     .cat-row .row-label {
       font-weight: 700;
-      font-size: 2.8vh;
+      font-size: 2.2vh;
     }
+    .cat-row .bar { height: 2vh; }
     .cat-funds {
-      padding-left: 3vw;
+      padding-left: 2vw;
+      margin-left: 22vw;
       border-left: 2px solid rgba(20,20,19,0.1);
-      margin-left: 19vw;
+    }
+    .fund-row {
+      padding: 0.1vh 0;
     }
     .fund-row .row-label {
       font-weight: 400;
-      font-size: 2.2vh;
-      color: #555;
+      font-size: 1.6vh;
+      color: #777;
+      width: 18vw;
     }
+    .fund-row .bar { height: 1.4vh; }
+    .fund-row .bar-pct { font-size: 1.3vh; }
   </style>
 </head>
 <body>
