@@ -67,10 +67,9 @@
       catRow.innerHTML = `<div class="row-label">${cat.category}</div>` + renderBars(cs.planned, cs.ideal, globalMax);
       chart.appendChild(catRow);
 
-      // Collapsible fund rows
+      // Fund rows (always visible)
       const fundsContainer = document.createElement('div');
       fundsContainer.className = 'cat-funds';
-      fundsContainer.hidden = true;
 
       for (const fund of cat.funds) {
         const item = itemMap[fund] || { planned_pct: 0, ideal_pct: 0 };
@@ -80,11 +79,6 @@
         fundsContainer.appendChild(fundRow);
       }
       chart.appendChild(fundsContainer);
-
-      catRow.addEventListener('click', () => {
-        fundsContainer.hidden = !fundsContainer.hidden;
-        catRow.classList.toggle('expanded');
-      });
     });
   }
 
