@@ -13,7 +13,7 @@
       color: #141413;
       display: flex;
       flex-direction: column;
-      padding: 3vh 4vw;
+      padding: 2.5vh 3vw;
     }
     .header {
       text-align: center;
@@ -44,43 +44,65 @@
       gap: 0.8vw;
     }
     .legend .swatch {
-      width: 2vh;
-      height: 2vh;
+      width: 1.8vh;
+      height: 1.8vh;
       border-radius: 3px;
       display: inline-block;
     }
     .swatch-actual { background: #d97757; }
     .swatch-ideal { background: #eda100; }
-    .chart {
+
+    /* Two-pane layout */
+    .panes {
+      flex: 1;
+      display: flex;
+      gap: 3vw;
+      min-height: 0;
+    }
+    .pane {
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
+    .pane-title {
+      font-family: system-ui, sans-serif;
+      font-size: 2vh;
+      font-weight: 600;
+      color: #30302e;
+      margin-bottom: 1vh;
+      padding-bottom: 0.5vh;
+      border-bottom: 2px solid rgba(20, 20, 19, 0.15);
+    }
+    .pane-chart {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+    }
+
+    /* Shared row styles */
     .row {
       display: flex;
       align-items: center;
-      gap: 1.5vw;
+      gap: 1vw;
     }
     .row-label {
-      width: 22vw;
       text-align: right;
-      font-size: 2vh;
       flex-shrink: 0;
+      font-family: system-ui, sans-serif;
     }
     .row-bars {
+      flex: 1;
       display: flex;
       flex-direction: column;
       gap: 0.2vh;
-      width: 55vw;
     }
     .bar-row {
       display: flex;
       align-items: center;
-      gap: 0.8vw;
+      gap: 0.6vw;
     }
     .bar {
-      height: 2vh;
       border-radius: 3px;
       transition: width 0.4s ease;
       min-width: 2px;
@@ -90,34 +112,35 @@
     .bar-ideal { background: #eda100; }
     .bar-pct {
       font-family: system-ui, sans-serif;
-      font-size: 1.6vh;
       color: #30302e;
       white-space: nowrap;
     }
-    .cat-row {
-      padding: 0.3vh 0;
-    }
-    .cat-row .row-label {
-      font-weight: 700;
+
+    /* Left pane: categories */
+    .pane-categories .row-label {
+      width: 11vw;
       font-size: 2.2vh;
+      font-weight: 600;
     }
-    .cat-row .bar { height: 2vh; }
-    .cat-funds {
-      padding-left: 2vw;
-      margin-left: 6vw;
-      border-left: 2px solid rgba(20,20,19,0.1);
-    }
-    .fund-row {
-      padding: 0.1vh 0;
-    }
-    .fund-row .row-label {
+    .pane-categories .bar { height: 2.2vh; }
+    .pane-categories .bar-pct { font-size: 1.8vh; }
+
+    /* Right pane: individual funds */
+    .pane-funds .row-label {
+      width: 13vw;
+      font-size: 1.7vh;
       font-weight: 400;
-      font-size: 1.6vh;
-      color: #777;
-      width: 18vw;
+      color: #555;
     }
-    .fund-row .bar { height: 1.4vh; }
-    .fund-row .bar-pct { font-size: 1.3vh; }
+    .pane-funds .bar { height: 1.6vh; }
+    .pane-funds .bar-pct { font-size: 1.4vh; }
+
+    /* Divider between panes */
+    .pane-divider {
+      width: 1px;
+      background: rgba(20, 20, 19, 0.15);
+      align-self: stretch;
+    }
   </style>
 </head>
 <body>
@@ -129,7 +152,17 @@
     <span><span class="swatch swatch-actual"></span> Actual</span>
     <span><span class="swatch swatch-ideal"></span> Avg. Ideal</span>
   </div>
-  <div class="chart" id="chart"></div>
+  <div class="panes">
+    <div class="pane pane-categories">
+      <div class="pane-title">By Category</div>
+      <div class="pane-chart" id="chart-categories"></div>
+    </div>
+    <div class="pane-divider"></div>
+    <div class="pane pane-funds">
+      <div class="pane-title">By Fund</div>
+      <div class="pane-chart" id="chart-funds"></div>
+    </div>
+  </div>
   <script>
     if (window.innerWidth <= 600) {
       const base = window.location.pathname.replace(/display\.html.*$/, '');

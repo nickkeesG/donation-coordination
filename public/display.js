@@ -36,9 +36,6 @@
     document.getElementById('total-amount').textContent = data.total.toLocaleString();
     document.getElementById('num-donors').textContent = data.num_donors;
 
-    const chart = document.getElementById('chart');
-    chart.innerHTML = '';
-
     const itemMap = Object.fromEntries(data.items.map(i => [i.cause_area, i]));
 
     // Compute category-level sums
@@ -52,34 +49,37 @@
       return { planned, ideal };
     });
 
-    // globalMax from category sums
+    // globalMax across both panes so bars are comparable
     let globalMax = 1;
     for (const s of catSums) {
       globalMax = Math.max(globalMax, s.planned, s.ideal);
     }
 
+    // Left pane: categories
+    const catChart = document.getElementById('chart-categories');
+    catChart.innerHTML = '';
+
     causeAreaCategories.forEach((cat, ci) => {
       const cs = catSums[ci];
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `<div class="row-label">${cat.category}</div>` + renderBars(cs.planned, cs.ideal, globalMax);
+      catChart.appendChild(row);
+    });
 
-      // Category row
-      const catRow = document.createElement('div');
-      catRow.className = 'row cat-row';
-      catRow.innerHTML = `<div class="row-label">${cat.category}</div>` + renderBars(cs.planned, cs.ideal, globalMax);
-      chart.appendChild(catRow);
+    // Right pane: individual funds
+    const fundChart = document.getElementById('chart-funds');
+    fundChart.innerHTML = '';
 
-      // Fund rows (always visible)
-      const fundsContainer = document.createElement('div');
-      fundsContainer.className = 'cat-funds';
-
+    for (const cat of causeAreaCategories) {
       for (const fund of cat.funds) {
         const item = itemMap[fund] || { planned_pct: 0, ideal_pct: 0 };
-        const fundRow = document.createElement('div');
-        fundRow.className = 'row fund-row';
-        fundRow.innerHTML = `<div class="row-label">${fund}</div>` + renderBars(item.planned_pct, item.ideal_pct, globalMax);
-        fundsContainer.appendChild(fundRow);
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.innerHTML = `<div class="row-label">${fund}</div>` + renderBars(item.planned_pct, item.ideal_pct, globalMax);
+        fundChart.appendChild(row);
       }
-      chart.appendChild(fundsContainer);
-    });
+    }
   }
 
   // Initial load
