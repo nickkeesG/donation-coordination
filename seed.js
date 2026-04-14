@@ -98,9 +98,11 @@ db.exec(`
   );
 `);
 
-// Clear existing data
+// Clear existing data (order matters for foreign keys)
 db.exec('DELETE FROM allocation_items');
 db.exec('DELETE FROM allocations');
+db.exec('DELETE FROM sessions');
+db.exec('DELETE FROM magic_links');
 db.exec('DELETE FROM users');
 
 const insertUser = db.prepare('INSERT INTO users (email) VALUES (?) RETURNING *');
