@@ -1,12 +1,13 @@
 /**
  * Seed script to populate the database with mock data.
- * Usage: node seed.js                    (uses default data.db)
- *        DB_FILE=data-dev.db node seed.js (uses dev database)
+ * Usage: node seed.js              (uses .env)
+ *        node seed.js .env.dev     (uses .env.dev)
  *
  * WARNING: This deletes all existing data before seeding.
  */
 
-require('dotenv').config({ path: process.env.ENV_FILE || '.env' });
+const envFile = process.argv[2] || '.env';
+require('dotenv').config({ path: envFile });
 const Database = require('better-sqlite3');
 const path = require('path');
 
