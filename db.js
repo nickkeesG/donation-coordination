@@ -33,7 +33,7 @@ const CAUSE_AREA_CATEGORIES = [
   },
   {
     category: 'AI Safety',
-    funds: ['Longview Frontier AI', 'AI Safety Tactical Opportunities Fund', 'Astralis Foundation'],
+    funds: ['Longview Frontier AI', 'AI Safety Tactical Opportunities', 'Astralis Foundation'],
   },
 ];
 

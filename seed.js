@@ -28,7 +28,7 @@ const FUNDS = [
   'Longview Nuclear Weapons Policy',
   'Sentinel Bio',
   'Longview Frontier AI',
-  'AI Safety Tactical Opportunities Fund',
+  'AI Safety Tactical Opportunities',
   'Astralis Foundation',
 ];
 
