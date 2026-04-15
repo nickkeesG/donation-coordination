@@ -12,7 +12,7 @@ button:hover { background: #c4654a; }
 .success { color: #5a8a5e; }
 .error { color: #c44; }
 label { display: block; margin-bottom: 4px; font-weight: 500; font-family: system-ui, sans-serif; font-size: 0.9em; }
-.cause-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.cause-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding-left: 24px; }
 .cause-row .name { width: 320px; flex-shrink: 0; font-size: 21px; font-family: system-ui, sans-serif; }
 .stepper { display: flex; align-items: center; gap: 4px; }
 input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
@@ -103,7 +103,7 @@ th { font-weight: 600; color: #30302e; }
   .agg-bar-label { font-size: 12px; width: 65px; }
 
   /* Cause rows: name on one line, stepper full-width below with flexible buttons */
-  .cause-row { flex-direction: column; gap: 4px; }
+  .cause-row { flex-direction: column; gap: 4px; padding-left: 0; }
   .cause-row .name { width: auto; }
   .cause-row .stepper { width: 100%; max-width: 320px; }
   .step-btn { flex: 1; min-width: 0; max-width: 60px; padding: 8px 0; font-size: 12px; text-align: center; }
