@@ -50,7 +50,7 @@
         const row = document.createElement('div');
         row.className = 'cause-row';
         row.innerHTML = `
-          <span class="name">${area}${fundLinks[area] ? ` <a href="${fundLinks[area]}" target="_blank" rel="noopener" class="fund-info" title="Learn more">?</a>` : ''}</span>
+          <span class="name">${fundLinks[area] ? `<a href="${fundLinks[area]}" target="_blank" rel="noopener" class="fund-link">${area}</a>` : area}</span>
           <div class="stepper">
             <button type="button" class="step-btn" data-delta="-10">-10</button>
             <button type="button" class="step-btn" data-delta="-1">-1</button>
