@@ -131,8 +131,8 @@ const seed = db.transaction(() => {
     const plannedBias = {};
     const idealBias = {};
     for (const idx of ANIMAL_WELFARE_INDICES) {
-      plannedBias[idx] = 0.3;
-      idealBias[idx] = 2.5;
+      plannedBias[idx] = 0.5;
+      idealBias[idx] = 1.5;
     }
     const planned = randomAllocation(plannedBias);
     const ideal = randomAllocation(idealBias);
