@@ -99,6 +99,7 @@ db.exec(`
 
 // Migrations
 try { db.exec('ALTER TABLE allocations ADD COLUMN display_name TEXT DEFAULT ""'); } catch (e) { /* column already exists */ }
+try { db.exec('ALTER TABLE allocations ADD COLUMN info_url TEXT DEFAULT ""'); } catch (e) { /* column already exists */ }
 
 // Prepared statements
 const stmts = {
@@ -124,7 +125,7 @@ const stmts = {
     'DELETE FROM sessions WHERE token = ?'
   ),
   upsertAllocation: db.prepare(
-    `INSERT INTO allocations (user_id, donation_amount, is_public, display_name, updated_at) VALUES (?, ?, ?, ?, datetime('now')) ON CONFLICT(user_id) DO UPDATE SET donation_amount = excluded.donation_amount, is_public = excluded.is_public, display_name = excluded.display_name, updated_at = datetime('now') RETURNING *`
+    `INSERT INTO allocations (user_id, donation_amount, is_public, display_name, info_url, updated_at) VALUES (?, ?, ?, ?, ?, datetime('now')) ON CONFLICT(user_id) DO UPDATE SET donation_amount = excluded.donation_amount, is_public = excluded.is_public, display_name = excluded.display_name, info_url = excluded.info_url, updated_at = datetime('now') RETURNING *`
   ),
   deleteAllocationItems: db.prepare(
     'DELETE FROM allocation_items WHERE allocation_id = ?'
@@ -154,7 +155,7 @@ const stmts = {
     'SELECT COALESCE(SUM(donation_amount), 0) as total, COUNT(*) as num_donors FROM allocations WHERE donation_amount > 0'
   ),
   getPublicDonations: db.prepare(`
-    SELECT a.donation_amount, a.is_public, a.display_name, u.email, a.id as allocation_id
+    SELECT a.donation_amount, a.is_public, a.display_name, a.info_url, u.email, a.id as allocation_id
     FROM allocations a
     JOIN users u ON a.user_id = u.id
     WHERE a.donation_amount > 0
@@ -197,8 +198,8 @@ function getOrCreateUser(email) {
   return stmts.getOrCreateUser.get(email);
 }
 
-const saveAllocation = db.transaction((userId, donationAmount, isPublic, displayName, items) => {
-  const allocation = stmts.upsertAllocation.get(userId, donationAmount, isPublic ? 1 : 0, displayName || '');
+const saveAllocation = db.transaction((userId, donationAmount, isPublic, displayName, infoUrl, items) => {
+  const allocation = stmts.upsertAllocation.get(userId, donationAmount, isPublic ? 1 : 0, displayName || '', infoUrl || '');
   stmts.deleteAllocationItems.run(allocation.id);
   for (const item of items) {
     stmts.insertAllocationItem.run(allocation.id, item.cause_area, item.planned_pct, item.ideal_pct);
@@ -250,6 +251,7 @@ function getPublicDonations() {
     const label = r.display_name ? `${r.display_name} (${r.email})` : r.email;
     return {
       name: label,
+      info_url: r.info_url || '',
       donation_amount: r.donation_amount,
       items,
     };

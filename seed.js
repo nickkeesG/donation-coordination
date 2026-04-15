@@ -115,8 +115,8 @@ db.exec('DELETE FROM allocations');
 
 const insertUser = db.prepare('INSERT INTO users (email) VALUES (?) ON CONFLICT(email) DO UPDATE SET email = email RETURNING *');
 const insertAlloc = db.prepare(
-  `INSERT INTO allocations (user_id, donation_amount, is_public, display_name, updated_at)
-   VALUES (?, ?, ?, ?, datetime('now')) RETURNING *`
+  `INSERT INTO allocations (user_id, donation_amount, is_public, display_name, info_url, updated_at)
+   VALUES (?, ?, ?, ?, ?, datetime('now')) RETURNING *`
 );
 const insertItem = db.prepare(
   'INSERT INTO allocation_items (allocation_id, cause_area, planned_pct, ideal_pct) VALUES (?, ?, ?, ?)'
@@ -125,7 +125,7 @@ const insertItem = db.prepare(
 const seed = db.transaction(() => {
   for (const u of MOCK_USERS) {
     const user = insertUser.get(u.email);
-    const alloc = insertAlloc.get(user.id, u.amount, u.public ? 1 : 0, u.name);
+    const alloc = insertAlloc.get(user.id, u.amount, u.public ? 1 : 0, u.name, '');
 
     // Animal welfare: low in planned, high in ideal
     const plannedBias = {};

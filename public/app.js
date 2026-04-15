@@ -125,6 +125,7 @@
   document.getElementById('donation-amount').value = me.donation_amount || 0;
   document.getElementById('is-anon').checked = !me.is_public;
   document.getElementById('display-name').value = me.display_name || '';
+  document.getElementById('info-url').value = me.info_url || '';
 
   // Show/hide name field based on anon toggle
   function updateNameFieldVisibility() {
@@ -148,6 +149,7 @@
       donation_amount: parseFloat(document.getElementById('donation-amount').value) || 0,
       is_anon: document.getElementById('is-anon').checked,
       display_name: document.getElementById('display-name').value.trim(),
+      info_url: document.getElementById('info-url').value.trim(),
       planned,
       ideal,
     };
@@ -171,6 +173,7 @@
   document.getElementById('donation-amount').addEventListener('input', checkDirty);
   document.getElementById('is-anon').addEventListener('change', checkDirty);
   document.getElementById('display-name').addEventListener('input', checkDirty);
+  document.getElementById('info-url').addEventListener('input', checkDirty);
   document.querySelectorAll('.step-btn').forEach(btn => btn.addEventListener('click', () => setTimeout(checkDirty, 0)));
   document.querySelectorAll('.stepper input[type="number"]').forEach(inp => inp.addEventListener('input', checkDirty));
 
@@ -220,6 +223,7 @@
         donation_amount: donationAmount,
         is_public: !document.getElementById('is-anon').checked,
         display_name: document.getElementById('display-name').value.trim(),
+        info_url: document.getElementById('info-url').value.trim(),
         items,
       }),
     });
@@ -386,10 +390,13 @@
 
     for (const d of data.donations) {
       const alloc = d.items.map(i => `${i.cause_area}: ${i.planned_pct}%`).join(', ');
+      const nameHtml = d.info_url
+        ? `${d.name} <a href="${d.info_url}" target="_blank" rel="noopener" class="fund-link">(info doc)</a>`
+        : d.name;
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${d.name}</td>
+        <td>${nameHtml}</td>
         <td>$${d.donation_amount.toLocaleString()}</td>
         <td style="font-size:12px">${alloc}</td>
       `;
@@ -400,7 +407,7 @@
       card.className = 'donation-card';
       card.innerHTML = `
         <div class="donation-card-header">
-          <span>${d.name}</span>
+          <span>${nameHtml}</span>
           <span>$${d.donation_amount.toLocaleString()}</span>
         </div>
         <div class="donation-card-alloc">${d.items.map(i => `${i.cause_area}: ${i.planned_pct}%`).join(' · ')}</div>
