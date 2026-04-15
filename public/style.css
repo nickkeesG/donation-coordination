@@ -57,6 +57,8 @@ th { font-weight: 600; color: #30302e; }
   padding-bottom: 4px;
 }
 .category-header:first-child { margin-top: 0; }
+.fund-info { display: inline-block; width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 50%; background: rgba(20, 20, 19, 0.1); color: #555; font-size: 13px; font-weight: 600; text-decoration: none; margin-left: 4px; vertical-align: middle; }
+.fund-info:hover { background: #d97757; color: white; }
 
 /* Aggregate: collapsible categories */
 .agg-category {

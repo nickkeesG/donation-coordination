@@ -18,7 +18,9 @@
 
   // Load cause areas (structured by category)
   const caRes = await fetch(basePath + '/api/cause-areas');
-  const causeAreaCategories = await caRes.json();
+  const caData = await caRes.json();
+  const causeAreaCategories = caData.categories;
+  const fundLinks = caData.links || {};
   causeAreas = causeAreaCategories.flatMap(c => c.funds);
 
   // Load current user data
@@ -48,7 +50,7 @@
         const row = document.createElement('div');
         row.className = 'cause-row';
         row.innerHTML = `
-          <span class="name">${area}</span>
+          <span class="name">${area}${fundLinks[area] ? ` <a href="${fundLinks[area]}" target="_blank" rel="noopener" class="fund-info" title="Learn more">?</a>` : ''}</span>
           <div class="stepper">
             <button type="button" class="step-btn" data-delta="-10">-10</button>
             <button type="button" class="step-btn" data-delta="-1">-1</button>

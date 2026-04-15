@@ -5,7 +5,8 @@
 
   // Load cause area categories for grouping
   const caRes = await fetch(basePath + '/api/cause-areas');
-  const causeAreaCategories = await caRes.json();
+  const caData = await caRes.json();
+  const causeAreaCategories = caData.categories;
 
   // Helper to render 2 bars (Actual, Avg. Ideal) and return HTML
   function renderBars(planned, ideal, globalMax) {

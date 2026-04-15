@@ -37,6 +37,21 @@ const CAUSE_AREA_CATEGORIES = [
   },
 ];
 
+// Info links for each fund
+const FUND_LINKS = {
+  'GiveWell (Unrestricted)': 'https://www.givewell.org/unrestricted-fund',
+  'Lead Exposure Action': 'https://coefficientgiving.org/funds/lead-exposure-action-fund/',
+  'EA Animal Welfare': 'https://funds.effectivealtruism.org/funds/animal-welfare',
+  'Navigation Cage-Free Accountability': 'https://docs.google.com/document/d/1OGlNfO8-nOLMIk1wqJdfnHvkJGLv8hGSIVkq64PjFTQ/edit?usp=drivesdk',
+  'Navigation General (Unrestricted)': 'https://www.navigation.org/',
+  'Rethink Priorities Cross Cause': 'https://docs.google.com/document/d/1SnYcPUnH_CajebBX3ZIRdU9IWeSmw9LOJ-6b4G8PeBM/edit?usp=sharing',
+  'Longview Nuclear Weapons Policy': 'https://www.longview.org/fund/nuclear-weapons-policy-fund/',
+  'Sentinel Bio': 'https://sentinelbio.org/',
+  'Longview Frontier AI': 'https://www.longview.org/fund/frontier-ai-fund/',
+  'AI Safety Tactical Opportunities': 'https://manifoldmarkets.notion.site/AI-Safety-Tactical-Opportunities-Fund-AISTOF-1bf54492ea7a80fcb088fd431b6b10b4',
+  'Astralis Foundation': 'https://astralisfoundation.org/',
+};
+
 // Flat list derived from categories (used for validation and sorting)
 const CAUSE_AREAS = CAUSE_AREA_CATEGORIES.flatMap(c => c.funds);
 
@@ -245,6 +260,7 @@ function getPublicDonations() {
 module.exports = {
   CAUSE_AREAS,
   CAUSE_AREA_CATEGORIES,
+  FUND_LINKS,
   createMagicLink,
   verifyMagicLink,
   createSession,
