@@ -23,12 +23,19 @@ const FUNDS = [
   'EA Animal Welfare',
   'Navigation Cage-Free Accountability',
   'Navigation General (Unrestricted)',
+  'Rethink Priorities Cross Cause',
   'Democracy Defense in Depth',
   'Longview Nuclear Weapons Policy',
   'Sentinel Bio',
   'Longview Frontier AI',
   'AI Safety Tactical Opportunities Fund',
   'Astralis Foundation',
+];
+
+// Animal welfare fund indices (planned gets reduced, ideal gets boosted)
+const ANIMAL_WELFARE_INDICES = [
+  FUNDS.indexOf('EA Animal Welfare'),
+  FUNDS.indexOf('Navigation Cage-Free Accountability'),
 ];
 
 const MOCK_USERS = [
@@ -53,9 +60,13 @@ const MOCK_USERS = [
 ];
 
 // Generate a random allocation that sums to 100
-function randomAllocation() {
-  // Give each fund a random weight, then normalize to 100
-  const weights = FUNDS.map(() => Math.random() * Math.random()); // skew toward 0 for sparsity
+// biases: optional object mapping fund index to a multiplier (e.g., 0.3 to reduce, 2.0 to boost)
+function randomAllocation(biases) {
+  const weights = FUNDS.map((_, i) => {
+    let w = Math.random() * Math.random(); // skew toward 0 for sparsity
+    if (biases && biases[i] !== undefined) w *= biases[i];
+    return w;
+  });
   const total = weights.reduce((s, w) => s + w, 0);
   const pcts = weights.map(w => Math.round((w / total) * 100));
 
@@ -119,8 +130,15 @@ const seed = db.transaction(() => {
     const user = insertUser.get(u.email);
     const alloc = insertAlloc.get(user.id, u.amount, u.public ? 1 : 0, u.name);
 
-    const planned = randomAllocation();
-    const ideal = randomAllocation();
+    // Animal welfare: low in planned, high in ideal
+    const plannedBias = {};
+    const idealBias = {};
+    for (const idx of ANIMAL_WELFARE_INDICES) {
+      plannedBias[idx] = 0.3;
+      idealBias[idx] = 2.5;
+    }
+    const planned = randomAllocation(plannedBias);
+    const ideal = randomAllocation(idealBias);
 
     for (let i = 0; i < FUNDS.length; i++) {
       insertItem.run(alloc.id, FUNDS[i], planned[i], ideal[i]);

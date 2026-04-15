@@ -21,7 +21,7 @@ const CAUSE_AREA_CATEGORIES = [
   },
   {
     category: 'General / Multi-Cause',
-    funds: ['Navigation General (Unrestricted)'],
+    funds: ['Navigation General (Unrestricted)', 'Rethink Priorities Cross Cause'],
   },
   {
     category: 'Democracy',
