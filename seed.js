@@ -109,14 +109,11 @@ db.exec(`
   );
 `);
 
-// Clear existing data (order matters for foreign keys)
+// Clear existing allocation data but keep users and sessions
 db.exec('DELETE FROM allocation_items');
 db.exec('DELETE FROM allocations');
-db.exec('DELETE FROM sessions');
-db.exec('DELETE FROM magic_links');
-db.exec('DELETE FROM users');
 
-const insertUser = db.prepare('INSERT INTO users (email) VALUES (?) RETURNING *');
+const insertUser = db.prepare('INSERT INTO users (email) VALUES (?) ON CONFLICT(email) DO UPDATE SET email = email RETURNING *');
 const insertAlloc = db.prepare(
   `INSERT INTO allocations (user_id, donation_amount, is_public, display_name, updated_at)
    VALUES (?, ?, ?, ?, datetime('now')) RETURNING *`
