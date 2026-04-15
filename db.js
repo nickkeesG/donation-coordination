@@ -12,7 +12,7 @@ db.pragma('foreign_keys = ON');
 // Cause areas grouped by category
 const CAUSE_AREA_CATEGORIES = [
   {
-    category: 'Global Health & Poverty',
+    category: 'Global Health & Development',
     funds: ['GiveWell (Unrestricted)', 'Lead Exposure Action'],
   },
   {
