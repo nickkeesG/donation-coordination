@@ -33,24 +33,24 @@
     </div>
 
     <div class="section">
-      <h2>Your Planned Allocation</h2>
-      <p>How do you plan to split your donation?</p>
-      <div id="planned-sliders"></div>
-      <p><strong>Total: <span id="planned-total">0</span>%</strong></p>
-    </div>
-
-    <div class="section" style="margin-bottom: 12px">
-      <div class="toggle-row">
-        <input type="checkbox" id="diff-ideal">
-        <label for="diff-ideal" style="margin:0;font-weight:normal">My ideal allocation differs from my planned allocation</label>
-      </div>
-    </div>
-
-    <div class="section" id="ideal-section" hidden>
       <h2>Your Ideal Allocation</h2>
       <p>If you could decide how everyone's donations were split, what would it be?</p>
       <div id="ideal-sliders"></div>
       <p><strong>Total: <span id="ideal-total">0</span>%</strong></p>
+    </div>
+
+    <div class="section" style="margin-bottom: 12px">
+      <div class="toggle-row">
+        <input type="checkbox" id="diff-planned">
+        <label for="diff-planned" style="margin:0;font-weight:normal">My planned allocation differs from my ideal allocation</label>
+      </div>
+    </div>
+
+    <div class="section" id="planned-section" hidden>
+      <h2>Your Planned Allocation</h2>
+      <p>How do you actually plan to split your donation?</p>
+      <div id="planned-sliders"></div>
+      <p><strong>Total: <span id="planned-total">0</span>%</strong></p>
     </div>
 
     <button id="save-btn">Save</button>

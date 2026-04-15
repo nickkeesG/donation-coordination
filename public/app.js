@@ -94,20 +94,20 @@
     el.style.color = sum === 100 ? '#16a34a' : '#dc2626';
   }
 
-  const plannedSliders = buildInputs('planned-sliders', 'planned-total', 'planned_pct');
   const idealSliders = buildInputs('ideal-sliders', 'ideal-total', 'ideal_pct');
+  const plannedSliders = buildInputs('planned-sliders', 'planned-total', 'planned_pct');
 
   // Determine if existing user has different planned vs ideal values
-  let idealDiffers = false;
+  let plannedDiffers = false;
   if (me.items && me.items.length > 0) {
-    idealDiffers = me.items.some(i => Math.round(i.planned_pct) !== Math.round(i.ideal_pct));
+    plannedDiffers = me.items.some(i => Math.round(i.planned_pct) !== Math.round(i.ideal_pct));
   }
-  document.getElementById('diff-ideal').checked = idealDiffers;
-  document.getElementById('ideal-section').hidden = !idealDiffers;
+  document.getElementById('diff-planned').checked = plannedDiffers;
+  document.getElementById('planned-section').hidden = !plannedDiffers;
 
-  // Show/hide ideal section based on checkbox
-  document.getElementById('diff-ideal').addEventListener('change', () => {
-    document.getElementById('ideal-section').hidden = !document.getElementById('diff-ideal').checked;
+  // Show/hide planned section based on checkbox
+  document.getElementById('diff-planned').addEventListener('change', () => {
+    document.getElementById('planned-section').hidden = !document.getElementById('diff-planned').checked;
     checkDirty();
   });
 
@@ -129,10 +129,10 @@
   function getFormState() {
     const planned = {};
     const ideal = {};
-    const diffIdeal = document.getElementById('diff-ideal').checked;
+    const diffPlanned = document.getElementById('diff-planned').checked;
     for (const area of causeAreas) {
-      planned[area] = parseInt(plannedSliders[area].value) || 0;
-      ideal[area] = diffIdeal ? (parseInt(idealSliders[area].value) || 0) : planned[area];
+      ideal[area] = parseInt(idealSliders[area].value) || 0;
+      planned[area] = diffPlanned ? (parseInt(plannedSliders[area].value) || 0) : ideal[area];
     }
     return {
       donation_amount: parseFloat(document.getElementById('donation-amount').value) || 0,
@@ -166,11 +166,11 @@
 
   // Save
   document.getElementById('save-btn').addEventListener('click', async () => {
-    const diffIdeal = document.getElementById('diff-ideal').checked;
+    const diffPlanned = document.getElementById('diff-planned').checked;
     const items = causeAreas.map(area => ({
       cause_area: area,
-      planned_pct: parseInt(plannedSliders[area].value),
-      ideal_pct: diffIdeal ? parseInt(idealSliders[area].value) : parseInt(plannedSliders[area].value),
+      ideal_pct: parseInt(idealSliders[area].value),
+      planned_pct: diffPlanned ? parseInt(plannedSliders[area].value) : parseInt(idealSliders[area].value),
     }));
 
     const donationAmount = parseFloat(document.getElementById('donation-amount').value) || 0;
@@ -186,18 +186,18 @@
       return;
     }
 
-    const plannedSum = items.reduce((s, i) => s + i.planned_pct, 0);
+    const idealSum = items.reduce((s, i) => s + i.ideal_pct, 0);
 
-    if (plannedSum !== 100) {
-      document.getElementById('save-status').textContent = `Planned allocation is ${plannedSum}% — must sum to 100%`;
+    if (idealSum !== 100) {
+      document.getElementById('save-status').textContent = `Ideal allocation is ${idealSum}% — must sum to 100%`;
       document.getElementById('save-status').style.color = '#dc2626';
       return;
     }
 
-    if (diffIdeal) {
-      const idealSum = items.reduce((s, i) => s + i.ideal_pct, 0);
-      if (idealSum !== 100) {
-        document.getElementById('save-status').textContent = `Ideal allocation is ${idealSum}% — must sum to 100%`;
+    if (diffPlanned) {
+      const plannedSum = items.reduce((s, i) => s + i.planned_pct, 0);
+      if (plannedSum !== 100) {
+        document.getElementById('save-status').textContent = `Planned allocation is ${plannedSum}% — must sum to 100%`;
         document.getElementById('save-status').style.color = '#dc2626';
         return;
       }
@@ -230,9 +230,8 @@
   // Get current user's ideal percentages from sliders
   function getMyIdealPcts() {
     const pcts = {};
-    const diffIdeal = document.getElementById('diff-ideal').checked;
     for (const area of causeAreas) {
-      pcts[area] = diffIdeal ? parseInt(idealSliders[area].value) : parseInt(plannedSliders[area].value);
+      pcts[area] = parseInt(idealSliders[area].value) || 0;
     }
     return pcts;
   }
