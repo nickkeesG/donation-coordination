@@ -250,19 +250,14 @@
     return pcts;
   }
 
-  // Helper to render 3 bars (Actual, Avg. Ideal, My Ideal) and return HTML
-  function renderBars(planned, ideal, myIdealPct, globalMax) {
+  // Helper to render 2 bars (Actual, My Ideal) and return HTML
+  function renderBars(planned, myIdealPct, globalMax) {
     const plannedW = globalMax > 0 ? (planned / globalMax) * 100 : 0;
-    const idealW = globalMax > 0 ? (ideal / globalMax) * 100 : 0;
     const myIdealW = globalMax > 0 ? (myIdealPct / globalMax) * 100 : 0;
     return `
       <div class="agg-bar-row">
         <span class="agg-bar-label">Actual</span>
         <div class="agg-bar-track"><span class="bar bar-planned" style="width:${plannedW}%"></span><span class="agg-bar-pct">${planned.toFixed(1)}%</span></div>
-      </div>
-      <div class="agg-bar-row">
-        <span class="agg-bar-label">Avg. Ideal</span>
-        <div class="agg-bar-track"><span class="bar bar-ideal" style="width:${idealW}%"></span><span class="agg-bar-pct">${ideal.toFixed(1)}%</span></div>
       </div>
       <div class="agg-bar-row">
         <span class="agg-bar-label">My Ideal</span>
@@ -284,20 +279,19 @@
 
     // Compute category-level sums for globalMax calculation
     const catSums = causeAreaCategories.map(cat => {
-      let planned = 0, ideal = 0, myI = 0;
+      let planned = 0, myI = 0;
       for (const f of cat.funds) {
-        const item = itemMap[f] || { planned_pct: 0, ideal_pct: 0 };
+        const item = itemMap[f] || { planned_pct: 0 };
         planned += item.planned_pct;
-        ideal += item.ideal_pct;
         myI += (myIdeal[f] || 0);
       }
-      return { planned, ideal, myI };
+      return { planned, myI };
     });
 
     // globalMax from category sums (always >= individual fund values)
     let globalMax = 1;
     for (const s of catSums) {
-      globalMax = Math.max(globalMax, s.planned, s.ideal, s.myI);
+      globalMax = Math.max(globalMax, s.planned, s.myI);
     }
 
     // Desktop chart
@@ -314,7 +308,7 @@
       // --- Desktop: category row ---
       const catRow = document.createElement('div');
       catRow.className = 'agg-category';
-      catRow.innerHTML = `<div class="agg-row-label">${cat.category}</div>` + renderBars(cs.planned, cs.ideal, cs.myI, globalMax);
+      catRow.innerHTML = `<div class="agg-row-label">${cat.category}</div>` + renderBars(cs.planned, cs.myI, globalMax);
       chart.appendChild(catRow);
 
       const fundsContainer = document.createElement('div');
@@ -322,11 +316,11 @@
       fundsContainer.hidden = true;
 
       for (const fund of cat.funds) {
-        const item = itemMap[fund] || { planned_pct: 0, ideal_pct: 0 };
+        const item = itemMap[fund] || { planned_pct: 0 };
         const myIdealPct = myIdeal[fund] || 0;
         const fundRow = document.createElement('div');
         fundRow.className = 'agg-fund-row';
-        fundRow.innerHTML = `<div class="agg-row-label">${fund}</div>` + renderBars(item.planned_pct, item.ideal_pct, myIdealPct, globalMax);
+        fundRow.innerHTML = `<div class="agg-row-label">${fund}</div>` + renderBars(item.planned_pct, myIdealPct, globalMax);
         fundsContainer.appendChild(fundRow);
       }
       chart.appendChild(fundsContainer);
@@ -339,7 +333,7 @@
       // --- Mobile: category card ---
       const catCard = document.createElement('div');
       catCard.className = 'agg-card agg-category-card';
-      catCard.innerHTML = `<div class="agg-card-header">${cat.category}</div>` + renderBars(cs.planned, cs.ideal, cs.myI, globalMax).replace(/agg-bar-row/g, 'agg-card-bar-row');
+      catCard.innerHTML = `<div class="agg-card-header">${cat.category}</div>` + renderBars(cs.planned, cs.myI, globalMax).replace(/agg-bar-row/g, 'agg-card-bar-row');
       cards.appendChild(catCard);
 
       const fundsCards = document.createElement('div');
@@ -347,11 +341,11 @@
       fundsCards.hidden = true;
 
       for (const fund of cat.funds) {
-        const item = itemMap[fund] || { planned_pct: 0, ideal_pct: 0 };
+        const item = itemMap[fund] || { planned_pct: 0 };
         const myIdealPct = myIdeal[fund] || 0;
         const fundCard = document.createElement('div');
         fundCard.className = 'agg-card agg-fund-card';
-        fundCard.innerHTML = `<div class="agg-card-header">${fund}</div>` + renderBars(item.planned_pct, item.ideal_pct, myIdealPct, globalMax).replace(/agg-bar-row/g, 'agg-card-bar-row');
+        fundCard.innerHTML = `<div class="agg-card-header">${fund}</div>` + renderBars(item.planned_pct, myIdealPct, globalMax).replace(/agg-bar-row/g, 'agg-card-bar-row');
         fundsCards.appendChild(fundCard);
       }
       cards.appendChild(fundsCards);
