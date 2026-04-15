@@ -109,7 +109,15 @@
 
   // Show/hide planned section based on checkbox
   document.getElementById('diff-planned').addEventListener('change', () => {
-    document.getElementById('planned-section').hidden = !document.getElementById('diff-planned').checked;
+    const checked = document.getElementById('diff-planned').checked;
+    if (checked) {
+      // Copy ideal values into planned fields as starting point
+      for (const area of causeAreas) {
+        plannedSliders[area].value = idealSliders[area].value;
+      }
+      updateTotal('planned-sliders', 'planned-total');
+    }
+    document.getElementById('planned-section').hidden = !checked;
     checkDirty();
   });
 
