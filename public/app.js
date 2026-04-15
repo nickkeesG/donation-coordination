@@ -51,10 +51,10 @@
           <span class="name">${area}</span>
           <div class="stepper">
             <span class="pct-box"><input type="number" min="0" value="${Math.round(val)}" data-area="${area}">%</span>
-            <button type="button" class="step-btn" data-delta="-10">⏷10</button>
-            <button type="button" class="step-btn" data-delta="-1">⏷1</button>
-            <button type="button" class="step-btn" data-delta="1">⏶1</button>
-            <button type="button" class="step-btn" data-delta="10">⏶10</button>
+            <button type="button" class="step-btn" data-delta="-10">↓10</button>
+            <button type="button" class="step-btn" data-delta="-1">↓1</button>
+            <button type="button" class="step-btn" data-delta="1">↑1</button>
+            <button type="button" class="step-btn" data-delta="10">↑10</button>
           </div>
         `;
         container.appendChild(row);
